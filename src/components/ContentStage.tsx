@@ -52,13 +52,13 @@ export default function ContentStage(props: props) {
     case "Order":
       return (
         <View>
-          <Order chef={false} orders={orders} />
+          <Order chef={false} orders={orders} api={api} />
         </View>
       );
     case "History":
       return (
         <View>
-          <History history={history} />
+          <History history={history} api={api} />
         </View>
       );
     default:
