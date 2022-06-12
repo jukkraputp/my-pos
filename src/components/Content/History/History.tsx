@@ -9,13 +9,13 @@ import { order } from "interface";
 
 interface props {
   history: order[];
+  api: API;
 }
 
 export default function History(props: props) {
   const [orders, setOrders] = useState(props.history);
 
-  const api = new API();
-  const type = "Order";
+  const api = props.api;
   const allImages = api.allImages;
 
   useEffect(() => {
