@@ -22,7 +22,7 @@ export default function ContentCard(props: props) {
       {props.from === "Menu" ? (
         <TouchableOpacity
           style={{ width: 100, height: 140, alignSelf: "center" }}
-          onPress={() => onChange(props.type + "_" + String(props.ID), "+ ")}
+          onPress={() => onChange(props.type + "_" + String(props.ID), "+")}
           disabled={disabled}
         >
           <Image style={{ width: 100, height: 100 }} source={props.image} />
