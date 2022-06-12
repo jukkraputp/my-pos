@@ -21,10 +21,11 @@ export default function Navbar(props: props) {
   }, [props.navbarList]);
 
   return (
-    <View style={{ display: "flex", backgroundColor: "darkgray", flex: 6 }}>
+    <View style={{ display: "flex", backgroundColor: "darkgray", flex: 5 }}>
       {[...Array(navbarList.length).keys()].map((index) => {
         return (
           <NavbarController
+            key={navbarList[index]}
             navbarName={navbarList[index]}
             image={Icon[index]}
             onChange={props.onChange}

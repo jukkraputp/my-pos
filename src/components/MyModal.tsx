@@ -11,11 +11,11 @@ interface props {
   items: { [key: string]: any };
   animation: any;
   children?: React.ReactNode | React.ReactNode[];
+  api: API;
 }
 
-const api = new API();
-
 export default function MyModal(props: props) {
+  const api = props.api;
   const modalVisible = props.modalVisible;
   const mode = props.mode;
 
@@ -47,6 +47,7 @@ export default function MyModal(props: props) {
               updateBasket={() => {}}
               items={props.items}
               inBasket={false}
+              api={api}
             />
             <Text style={{ fontSize: 16, fontWeight: "bold" }}>
               {api.getTotalAmount(props.items)} บาท
@@ -86,7 +87,8 @@ const styles = StyleSheet.create({
     marginVertical: "5%",
   },
   modalView: {
-    margin: 20,
+    width: 300,
+    /* margin: 20, */
     backgroundColor: "white",
     borderRadius: 20,
     padding: 35,

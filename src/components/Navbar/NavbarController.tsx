@@ -1,4 +1,11 @@
-import { View, Text, TouchableOpacity, StyleSheet, Image } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Image,
+  Platform,
+} from "react-native";
 import React from "react";
 import materialTheme from "../../constants/Theme";
 
@@ -31,6 +38,8 @@ export default function NavbarController(props: props) {
         style={{
           justifyContent: "center",
           flex: 1,
+          /* borderColor: "black",
+          borderWidth: 1, */
         }}
         onPress={() => changeContent()}
       >
@@ -41,7 +50,9 @@ export default function NavbarController(props: props) {
           ]}
         >
           <View>
-            <Image source={image} style={{ width: 80, height: 80 }} />
+            {Platform.OS == "web" && (
+              <Image source={image} style={{ width: 80, height: 80 }} />
+            )}
             <Text style={styles.headline}>{map[title]}</Text>
           </View>
         </View>
@@ -54,8 +65,8 @@ export default function NavbarController(props: props) {
 
 const styles = StyleSheet.create({
   defaultStyle: {
-    paddingVertical: 16,
-    paddingHorizontal: 16,
+    paddingVertical: 45,
+    paddingHorizontal: 18,
   },
   activeStyle: {
     backgroundColor: materialTheme.COLORS.ACTIVE,
@@ -81,7 +92,7 @@ const styles = StyleSheet.create({
   headline: {
     textAlign: "center", // <-- the magic
     fontWeight: "bold",
-    fontSize: 24,
+    fontSize: 20,
     marginTop: 0,
     marginStart: "10%",
   },

@@ -3,19 +3,15 @@ import React, { useEffect, useState } from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import * as ScreenOrientation from "expo-screen-orientation";
 
-import useCachedResources from "./hooks/useCachedResources";
-import useColorScheme from "./hooks/useColorScheme";
-import Navigation from "./navigation";
-import Reception from "./screens/Reception";
-import Chef from "./screens/Chef";
-import Login from "./screens/Login";
+import useCachedResources from "./src/hooks/useCachedResources";
+import useColorScheme from "./src/hooks/useColorScheme";
+import Navigation from "./src/navigation";
+import Reception from "./src/screens/Reception";
+import Chef from "./src/screens/Chef";
+import Login from "./src/screens/Login";
 import { onAuthStateChanged } from "firebase/auth";
-import { db, auth as firebaseAuth } from "./apis/firebase";
-import { LogBox } from "react-native";
-
-LogBox.ignoreLogs([
-  "Warning: Async Storage has been extracted from react-native core",
-]);
+import API from "./src/apis/API";
+import { Platform } from "react-native";
 
 async function changeScreenOrientation() {
   await ScreenOrientation.lockAsync(
@@ -24,17 +20,19 @@ async function changeScreenOrientation() {
 }
 
 export default function App() {
-  const [auth, setAuth] = useState<boolean | string>('waiter');
+  const [auth, setAuth] = useState<boolean | string>(
+    Platform.OS === "android" ? "waiter" : "chef"
+  );
 
-  const isLoadingComplete = useCachedResources();
+  const api = new API();
+
+  const isLoadingComplete = useCachedResources(api);
   const colorScheme = useColorScheme();
 
   const shopName = "Steak Station";
 
   useEffect(() => {
     changeScreenOrientation();
-
-    firebaseAuth.signOut();
 
     /* onAuthStateChanged(firebaseAuth, (user: any) => {
       if (user) {
@@ -52,12 +50,12 @@ export default function App() {
   }, []);
 
   if (!isLoadingComplete) {
-    return <></>;
+    return null;
   } else {
     switch (auth) {
       case "waiter":
       case "reception":
-        return <Reception />;
+        return <Reception api={api} />;
       case "chef":
         return <Chef />;
       default:

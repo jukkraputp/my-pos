@@ -1,19 +1,20 @@
-import { Dimensions, View } from "react-native";
+import { View } from "react-native";
 import React, { useEffect, useState } from "react";
 import ContentCard from "../ContentCard";
-import API from "../../../apis/API";
+import API from "src/apis/API";
 
 interface props {
   type: string;
   onChange: Function;
+  api: API;
 }
-
-const api = new API();
 
 export default function Menu(props: props) {
   const [menu, setMenu] = useState<any[]>([]);
 
-  const allImages = api.getAllImages();
+  const api = props.api;
+
+  const allImages = api.allImages;
 
   useEffect(() => {
     const index = props.type + "_Images";
@@ -39,6 +40,7 @@ export default function Menu(props: props) {
           marginTop: 5,
           justifyContent: "space-around",
         }}
+        key={itemID}
       >
         {data.map((image, idx) => {
           return (
@@ -50,6 +52,7 @@ export default function Menu(props: props) {
               type={props.type}
               onChange={props.onChange}
               key={props.type + "_" + String(itemID + idx)}
+              from={"Menu"}
             />
           );
         })}

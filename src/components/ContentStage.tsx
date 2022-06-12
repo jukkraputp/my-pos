@@ -6,16 +6,20 @@ import History from "./Content/History/History";
 import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "../apis/firebase";
 import { order } from "interface";
+import API from "src/apis/API";
 
 interface props {
   content: string;
   updateBasket: Function;
   toggleOrder: Function;
+  api: API;
 }
 
 export default function ContentStage(props: props) {
   const [orders, setOrders] = useState<Array<order>>([]);
   const [history, setHistory] = useState<Array<order>>([]);
+
+  const api = props.api;
 
   useEffect(() => {
     const listenOrder = onSnapshot(collection(db, "Order"), (snapShot) => {
@@ -42,7 +46,7 @@ export default function ContentStage(props: props) {
     case "FoodSet":
       return (
         <View>
-          <Menu type={props.content} onChange={props.updateBasket} />
+          <Menu type={props.content} onChange={props.updateBasket} api={api} />
         </View>
       );
     case "Order":

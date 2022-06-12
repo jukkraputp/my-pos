@@ -15,7 +15,9 @@ import { getAuth } from "firebase/auth";
 import { db, auth } from "../apis/firebase";
 import { addDoc, collection } from "firebase/firestore";
 
-interface props {}
+interface props {
+  api: API;
+}
 
 interface state {
   content: string;
@@ -41,11 +43,11 @@ export default class Reception extends React.Component<props, state> {
       "FoodSet",
       "Order",
       "History",
-      "Logout",
+      /* "Logout", */
     ];
     this.showCurrent =
       this.state.content !== "Order" && this.state.content !== "History";
-    this.API = new API();
+    this.API = props.api;
   }
 
   toggleOrder = () => {};
@@ -61,7 +63,7 @@ export default class Reception extends React.Component<props, state> {
     this.setState({ content: contentName });
   };
 
-  updateBasket = (ID: string, sign = "+") => {
+  updateBasket = (ID: string, sign: string) => {
     var obj: { [key: string]: number } = this.state.basket;
     if (ID in this.state.basket) {
       if (sign === "+") {
@@ -107,7 +109,7 @@ export default class Reception extends React.Component<props, state> {
 
   render() {
     return (
-      <View style={{ flex: 1, maxHeight: Dimensions.get("window").height }}>
+      <View style={{ flex: 1, maxHeight: Dimensions.get("screen").height }}>
         <View
           style={{
             flex: 10.01,
@@ -115,7 +117,7 @@ export default class Reception extends React.Component<props, state> {
             backgroundColor: "white",
           }}
         >
-          <View style={{ flex: 2 }}>
+          <View style={{ flex: 1 }}>
             <Navbar
               navbarList={this.navbarList}
               onChange={this.changeContent}
@@ -125,7 +127,7 @@ export default class Reception extends React.Component<props, state> {
 
           <View
             style={{
-              flex: this.showCurrent ? 5 : 7,
+              flex: this.showCurrent ? 4 : 6,
               paddingTop: StatusBar.currentHeight,
             }}
           >
@@ -139,6 +141,7 @@ export default class Reception extends React.Component<props, state> {
                 content={this.state.content}
                 updateBasket={this.updateBasket}
                 toggleOrder={this.toggleOrder}
+                api={this.API}
               />
             </ScrollView>
           </View>
@@ -152,6 +155,7 @@ export default class Reception extends React.Component<props, state> {
                 updateBasket={this.updateBasket}
                 confirmOrder={this.confirmOrder}
                 clearBasket={this.clearBasket}
+                api={this.API}
               />
             </View>
           )}
@@ -160,8 +164,8 @@ export default class Reception extends React.Component<props, state> {
         {this.state.confirmingOrder && (
           <View
             style={{
-              width: Dimensions.get("window").width,
-              height: Dimensions.get("window").height,
+              width: Dimensions.get("screen").width,
+              height: Dimensions.get("screen").height,
               backgroundColor: "rgba(52, 52, 52, 0.8)",
               position: "absolute",
             }}
@@ -173,6 +177,7 @@ export default class Reception extends React.Component<props, state> {
               items={this.state.basket}
               mode={"confirm order"}
               title={""}
+              api={this.API}
             />
           </View>
         )}
@@ -187,7 +192,7 @@ const styles = StyleSheet.create({
     paddingTop: StatusBar.currentHeight,
   },
   scrollView: {
-    marginHorizontal: 20,
+    marginHorizontal: 5,
   },
   text: {
     fontSize: 42,

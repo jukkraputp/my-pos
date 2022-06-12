@@ -8,33 +8,17 @@ import getOrders from "./getOrders";
 import getName from "./getName";
 
 export default class API {
-    constructor() {
+    allImages
 
+    constructor() {
+        this.allImages = { Food1_Images, Food2_Images, FoodSet_Images }
     }
 
     getOrders = async () => {
         return await getOrders();
     };
 
-    getImages = (type: string) => {
-        if (type === "Food1") {
-            return Food1_Images;
-        } else if (type === "Food2") {
-            return Food2_Images;
-        } else if (type === "FoodSet") {
-            return FoodSet_Images;
-        } else {
-            return "Wrong type!";
-        }
-    };
-
     cacheImages = () => { };
-
-    getAllImages = () => {
-        console.log("returning images");
-        const allImages = { Food1_Images, Food2_Images, FoodSet_Images };
-        return allImages;
-    };
 
     getIcons = () => {
         return Icon;

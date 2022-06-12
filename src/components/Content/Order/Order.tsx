@@ -30,10 +30,10 @@ export default function Order(props: props) {
   const [orders, setOrders] = useState<Array<order>>([]);
 
   const api = new API();
-  const allImages = api.getAllImages();
+  const allImages = api.allImages;
 
   useEffect(() => {
-    setOrders(props.orders);
+    if (!!props.orders) setOrders(props.orders);
   }, [props.orders]);
 
   const renderRow = (
@@ -50,15 +50,17 @@ export default function Order(props: props) {
           marginTop: 5,
           justifyContent: "flex-start",
         }}
+        key={data[0] + "order_renderRow"}
       >
         {data.map((image, idx) => {
-          console.log(image, ids[image]);
           return (
             <View
               style={{
                 flex: 1,
                 flexDirection: "row",
+                marginRight: 10,
               }}
+              key={ids[image] + "order_renderRow_card"}
             >
               <ContentCard
                 name={api.getName(ids[image])}
@@ -68,6 +70,7 @@ export default function Order(props: props) {
                 type={ids[image]}
                 onChange={() => {}}
                 key={ids[image]}
+                from={"Order"}
               />
               <Text
                 style={{
@@ -101,9 +104,13 @@ export default function Order(props: props) {
     };
 
     var jsx = [];
-    jsx.push(<Text style={{ flex: 1 }}>ราคารวม {order.totalAmount} บาท</Text>);
     jsx.push(
-      <Text style={{ flex: 1 }}>
+      <Text style={{ flex: 1 }} key={order.date + "order_totalAmount"}>
+        ราคารวม {order.totalAmount} บาท
+      </Text>
+    );
+    jsx.push(
+      <Text style={{ flex: 1 }} key={order.date + "order_Status"}>
         Status: {order.isFinished ? "Ready" : "Waiting"}
       </Text>
     );
@@ -115,6 +122,7 @@ export default function Order(props: props) {
           alignItems: "center",
           justifyContent: "center",
         }}
+        key={order.date}
       >
         <TouchableOpacity
           style={{
@@ -181,7 +189,7 @@ export default function Order(props: props) {
           });
         var jsx = [
           [
-            <View style={{ marginTop: 5 }}>
+            <View style={{ marginTop: 5 }} key={obj.date + "order_header"}>
               <Text>{"Order ID: " + obj.date}</Text>
             </View>,
           ],
@@ -194,6 +202,7 @@ export default function Order(props: props) {
                   backgroundColor: "black",
                   alignItems: "center",
                 }}
+                key={obj.date + "order_startLine"}
               >
                 <View
                   style={{
@@ -206,7 +215,7 @@ export default function Order(props: props) {
             )
           : (startLine = true);
         var start = 0;
-        const perRow = 5;
+        const perRow = 4;
         var countRow = 0;
         for (let index = perRow; index < menu.length; index += perRow) {
           jsx.push([renderRow(menu.slice(start, index), ids, 0, amounts)]);
@@ -223,7 +232,10 @@ export default function Order(props: props) {
         ]);
         countRow++;
         row.push(
-          <View style={{ flexDirection: "row", backgroundColor: "grey" }}>
+          <View
+            style={{ flexDirection: "row", backgroundColor: "grey" }}
+            key={obj.date + "order_row"}
+          >
             <View style={{ flex: 4 }}>{jsx}</View>
             <View
               style={{
@@ -255,7 +267,6 @@ export default function Order(props: props) {
     <ScrollView
       style={{
         backgroundColor: "white",
-        maxHeight: Dimensions.get("window").height,
       }}
       showsHorizontalScrollIndicator={false}
     >

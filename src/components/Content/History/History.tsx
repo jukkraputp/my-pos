@@ -16,7 +16,7 @@ export default function History(props: props) {
 
   const api = new API();
   const type = "Order";
-  const allImages = api.getAllImages();
+  const allImages = api.allImages;
 
   useEffect(() => {
     setOrders(props.history);
@@ -54,6 +54,7 @@ export default function History(props: props) {
                 type={ids[image]}
                 onChange={() => {}}
                 key={ids[image]}
+                from={"History"}
               />
               <Text
                 style={{
