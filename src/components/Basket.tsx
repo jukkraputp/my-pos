@@ -79,39 +79,45 @@ export default function Basket(props: props) {
         inBasket={true}
         api={api}
       />
-      <View
-        style={{
-          borderTopWidth: 1,
-          borderColor: "black",
-          flexDirection: "row",
-          justifyContent: "space-between",
-          height: maxHeight * 0.05,
-        }}
-      >
-        <Text style={{ fontSize: 20 }}>amount</Text>
-        <Text style={{ fontSize: 20 }}>{api.getTotalAmount(items)}</Text>
-      </View>
-      <View style={{ height: maxHeight * 0.1 }}>
-        <TouchableOpacity
-          onPress={confirmOrder}
-          style={{
-            backgroundColor: "black",
-            height: maxHeight * 0.1,
-            justifyContent: "center",
-          }}
-        >
-          <Text
+      {Object.keys(items).length > 0 && (
+        <>
+          <View
             style={{
-              color: "white",
-              fontSize: 36,
-              fontWeight: "bold",
-              textAlign: "center",
+              borderTopWidth: 1,
+              borderColor: "black",
+              flexDirection: "row",
+              justifyContent: "space-between",
+              height: maxHeight * 0.05,
             }}
           >
-            Confirm
-          </Text>
-        </TouchableOpacity>
-      </View>
+            <Text style={{ fontSize: 20, marginLeft: 5 }}>ราคารวม</Text>
+            <Text style={{ fontSize: 20, marginRight: 5 }}>
+              {api.getTotalAmount(items).toLocaleString()} บาท
+            </Text>
+          </View>
+          <View style={{ height: maxHeight * 0.1 }}>
+            <TouchableOpacity
+              onPress={confirmOrder}
+              style={{
+                backgroundColor: "black",
+                height: maxHeight * 0.1,
+                justifyContent: "center",
+              }}
+            >
+              <Text
+                style={{
+                  color: "white",
+                  fontSize: 36,
+                  fontWeight: "bold",
+                  textAlign: "center",
+                }}
+              >
+                Confirm
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </>
+      )}
     </View>
   );
 }
