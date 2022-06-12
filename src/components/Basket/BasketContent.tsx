@@ -22,6 +22,10 @@ export default function BasketContent(props: props) {
   const allImages = api.allImages;
   const items = props.items;
 
+  useEffect(() => {
+    console.log(Object.keys(items));
+  });
+
   const renderBasket = () => {
     var jsx: JSX.Element[][] = [];
     if (Object.keys(items).length !== 0) {
@@ -79,10 +83,10 @@ export default function BasketContent(props: props) {
                     </TouchableOpacity>
                   )}
                   <Text
-                    style={
-                      [styles.itemAmountText,
-                      !props.inBasket && { left: "20%" }]
-                    }
+                    style={[
+                      styles.itemAmountText,
+                      !props.inBasket && { left: "20%" },
+                    ]}
                   >
                     {!props.inBasket && " x  "}
                     {itemAmount}
