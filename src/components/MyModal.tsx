@@ -1,4 +1,12 @@
-import { View, Text, StyleSheet, Modal, Pressable, Alert } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Modal,
+  Pressable,
+  Alert,
+  Image,
+} from "react-native";
 import React from "react";
 import BasketContent from "./Basket/BasketContent";
 import API from "../apis/API";
@@ -42,6 +50,25 @@ export default function MyModal(props: props) {
       case "confirm order":
         return (
           <View style={styles.modalView}>
+            <Pressable
+              style={{
+                width: 20,
+                height: 20,
+                left: "55%",
+                bottom: "5%",
+              }}
+              onPress={() => {
+                setModalVisible(false);
+              }}
+            >
+              <Image
+                source={require("../assets/icons/icon-close-512.webp")}
+                style={{
+                  width: 20,
+                  height: 20,
+                }}
+              />
+            </Pressable>
             <Text style={styles.modalText}> Order </Text>
             <BasketContent
               updateBasket={() => {}}
@@ -70,7 +97,6 @@ export default function MyModal(props: props) {
         transparent={true}
         visible={modalVisible}
         onRequestClose={() => {
-          Alert.alert("Modal has been closed.");
           setModalVisible(!modalVisible);
         }}
       >
