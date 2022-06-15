@@ -31,7 +31,7 @@ export default function BasketContent(props: props) {
     if (Object.keys(items).length !== 0) {
       Object.keys(items).forEach((itemName: string) => {
         const itemAmount = items[itemName];
-        var image: any;
+        var image: string;
         const index = itemName.split("_")[0] + "_Images";
         switch (index) {
           case "Food1_Images":
@@ -42,6 +42,9 @@ export default function BasketContent(props: props) {
             break;
           case "FoodSet_Images":
             image = allImages.FoodSet_Images[Number(itemName.split("_")[1])];
+            break;
+          default:
+            image = "";
             break;
         }
         jsx.push([
@@ -63,7 +66,7 @@ export default function BasketContent(props: props) {
                   justifyContent: "space-between",
                 }}
               >
-                <Image style={styles.bigImage} source={image} />
+                <Image style={styles.bigImage} source={{ uri: image }} />
                 <View
                   style={{
                     flexDirection: "row",
@@ -78,7 +81,9 @@ export default function BasketContent(props: props) {
                     >
                       <Image
                         style={styles.smallImage}
-                        source={require("../../assets/images/Sign/plus-sign.svg")}
+                        source={{
+                          uri: "https://cdn.discordapp.com/attachments/831568260662820915/985935537309372488/Plus.png",
+                        }}
                       />
                     </TouchableOpacity>
                   )}
@@ -98,7 +103,9 @@ export default function BasketContent(props: props) {
                     >
                       <Image
                         style={styles.smallImage}
-                        source={require("../../assets/images/Sign/minus-sign.svg")}
+                        source={{
+                          uri: "https://cdn.discordapp.com/attachments/831568260662820915/985935562412285992/Minus.png",
+                        }}
                       />
                     </TouchableOpacity>
                   )}
