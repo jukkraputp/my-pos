@@ -5,9 +5,16 @@ import Order from "../components/Content/Order/Order";
 import { order } from "interface";
 import { onSnapshot, collection } from "firebase/firestore";
 import { db } from "../apis/firebase";
+import API from "src/apis/API";
 
-export default function Chef() {
+interface props {
+  api: API;
+}
+
+export default function Chef(props: props) {
   const [orders, setOrders] = useState<Array<order>>([]);
+
+  const api = props.api;
 
   useEffect(() => {
     const listenOrder = onSnapshot(collection(db, "Order"), (snapShot) => {
@@ -22,7 +29,7 @@ export default function Chef() {
   return (
     <View>
       <View>
-        <Order orders={orders} chef={true} />
+        <Order api={api} orders={orders} chef={true} />
       </View>
       <Logout />
     </View>

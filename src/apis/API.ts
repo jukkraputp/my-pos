@@ -6,19 +6,26 @@ import FoodSet_Images from "../constants/FoodSet_Images";
 import Icon from "../constants/Icon";
 import getOrders from "./getOrders";
 import getName from "./getName";
+import Sign_Images, { signList } from "../constants/Sign_Images"
 
 export default class API {
     allImages
+    signs: { [key: string]: string } = {
+        'plus': '',
+        'minus': '',
+        'close': ''
+    }
 
     constructor() {
         this.allImages = { Food1_Images, Food2_Images, FoodSet_Images }
+        Sign_Images.forEach((sign, index) => {
+            this.signs[signList[index]] = sign
+        })
     }
 
     getOrders = async () => {
         return await getOrders();
     };
-
-    cacheImages = () => { };
 
     getIcons = () => {
         return Icon;

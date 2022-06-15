@@ -3,6 +3,7 @@ import { Asset } from 'expo-asset';
 import * as Font from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect, useState } from 'react';
+import { Image } from 'react-native';
 import API from 'src/apis/API';
 
 export default function useCachedResources(api: API) {
@@ -10,13 +11,11 @@ export default function useCachedResources(api: API) {
 
   const cacheResources = async (images: any[]) => {
     const cacheImages = images.map((image) => {
-      return Asset.fromModule(image).downloadAsync()
+      return Image.prefetch(image)
     })
 
     return Promise.all(cacheImages)
   }
-
-
 
   // Load any resources or data that we need prior to rendering the app
   useEffect(() => {
@@ -52,6 +51,10 @@ export default function useCachedResources(api: API) {
           images.map((image) => {
             imagesList.push(image)
           })
+        })
+        const signsObject = api.signs
+        Object.keys(signsObject).forEach((signName) => {
+          imagesList.push(signsObject[signName])
         })
         await cacheResources(imagesList)
 

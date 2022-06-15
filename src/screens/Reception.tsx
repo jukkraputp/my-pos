@@ -12,7 +12,7 @@ import ContentStage from "../components/ContentStage";
 import Basket from "../components/Basket";
 import MyModal from "../components/MyModal";
 import { getAuth } from "firebase/auth";
-import { db, auth } from "../apis/firebase";
+import { db } from "../apis/firebase";
 import { addDoc, collection } from "firebase/firestore";
 
 interface props {
@@ -33,7 +33,7 @@ export default class Reception extends React.Component<props, state> {
   constructor(props: props) {
     super(props);
     this.state = {
-      content: "Food1",
+      content: "History",
       basket: {},
       confirmingOrder: false,
     };
@@ -43,7 +43,7 @@ export default class Reception extends React.Component<props, state> {
       "FoodSet",
       "Order",
       "History",
-      /* "Logout", */
+      "Option",
     ];
     this.showCurrent =
       this.state.content !== "Order" && this.state.content !== "History";
@@ -53,10 +53,6 @@ export default class Reception extends React.Component<props, state> {
   toggleOrder = () => {};
 
   changeContent = (contentName: string) => {
-    if (contentName === "Logout") {
-      auth.signOut();
-      return;
-    }
     contentName === "Order" || contentName === "History"
       ? (this.showCurrent = false)
       : (this.showCurrent = true);

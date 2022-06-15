@@ -9,9 +9,10 @@ import Navigation from "./src/navigation";
 import Reception from "./src/screens/Reception";
 import Chef from "./src/screens/Chef";
 import Login from "./src/screens/Login";
-import { onAuthStateChanged } from "firebase/auth";
 import API from "./src/apis/API";
 import { Platform } from "react-native";
+import { storage } from "./src/apis/firebase";
+import { getDownloadURL, ref } from "firebase/storage";
 
 async function changeScreenOrientation() {
   await ScreenOrientation.lockAsync(
@@ -20,9 +21,7 @@ async function changeScreenOrientation() {
 }
 
 export default function App() {
-  const [auth, setAuth] = useState<boolean | string>(
-    Platform.OS === "android" ? "waiter" : "chef"
-  );
+  const [auth, setAuth] = useState<boolean | string>(false);
 
   const api = new API();
 
@@ -33,20 +32,6 @@ export default function App() {
 
   useEffect(() => {
     changeScreenOrientation();
-
-    /* onAuthStateChanged(firebaseAuth, (user: any) => {
-      if (user) {
-        const mode = user.email.split("@")[0];
-        if (mode === "waiter" || mode === "reception" || mode === "chef") {
-          console.log(mode);
-          setAuth(mode);
-        } else {
-          firebaseAuth.signOut();
-        }
-      } else {
-        setAuth(false);
-      }
-    }); */
   }, []);
 
   if (!isLoadingComplete) {
@@ -57,9 +42,9 @@ export default function App() {
       case "reception":
         return <Reception api={api} />;
       case "chef":
-        return <Chef />;
+        return <Chef api={api} />;
       default:
-        return <Login name={shopName} />;
+        return <Login api={api} name={shopName} setAuth={setAuth} />;
     }
   }
 }

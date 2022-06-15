@@ -1,3 +1,21 @@
+import { storage } from "../apis/firebase";
+import { getDownloadURL, ref } from "firebase/storage";
+
+var urlList: any[] = []
+var index = 0
+
+while (true) {
+  try {
+    const storageRef = ref(storage, `Food1/Food1-${index}.jpg`)
+    getDownloadURL(storageRef).then((url) => {
+      urlList.push(url)
+    })
+  } catch (err) {
+    console.log(err)
+    break
+  }
+}
+
 const Food1_0 = require("../assets/images/Food1/Food1-0.jpg");
 const Food1_1 = require("../assets/images/Food1/Food1-1.jpg");
 const Food1_2 = require("../assets/images/Food1/Food1-2.jpg");
