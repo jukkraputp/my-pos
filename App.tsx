@@ -37,7 +37,7 @@ export default function App() {
     switch (auth) {
       case "waiter":
       case "reception":
-        return <Reception api={api} />;
+        return <Reception />;
       case "chef":
         return <Chef />;
       default:

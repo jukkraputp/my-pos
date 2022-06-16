@@ -16,4 +16,8 @@ while (true) {
   }
 }
 
+<<<<<<< HEAD
 export default urlList
+=======
+export default urlList
+>>>>>>> 4b9ea680eae1eea7d4b6d055267dc927c4040814

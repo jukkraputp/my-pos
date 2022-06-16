@@ -1,11 +1,4 @@
-import {
-  View,
-  Text,
-  ScrollView,
-  Dimensions,
-  TouchableOpacity,
-  ImageSourcePropType,
-} from "react-native";
+import { View, Text, ScrollView, TouchableOpacity } from "react-native";
 import React, { useEffect, useState } from "react";
 import API from "../../../apis/API";
 import ContentCard from "../ContentCard";
@@ -206,7 +199,6 @@ export default function Order(props: props) {
               <View
                 style={{
                   height: 5,
-                  backgroundColor: "black",
                   alignItems: "center",
                 }}
                 key={obj.date + "order_startLine"}
@@ -214,7 +206,6 @@ export default function Order(props: props) {
                 <View
                   style={{
                     height: 2.5,
-                    backgroundColor: "white",
                     alignContent: "stretch",
                   }}
                 />
@@ -240,7 +231,7 @@ export default function Order(props: props) {
         countRow++;
         row.push(
           <View
-            style={{ flexDirection: "row", backgroundColor: "grey" }}
+            style={{ flexDirection: "row", backgroundColor: "lightgrey" }}
             key={obj.date + "order_row"}
           >
             <View style={{ flex: 4 }}>{jsx}</View>
@@ -248,10 +239,11 @@ export default function Order(props: props) {
               style={{
                 width: 5,
                 backgroundColor: "black",
-                borderLeftWidth: 2.5,
-                borderRightWidth: 2.5,
+                height: "100%",
+                borderWidth: 2.5,
                 borderColor: "white",
                 marginTop: 0,
+                alignSelf: "center",
               }}
             />
             <View
@@ -284,7 +276,5 @@ export default function Order(props: props) {
     >
       {renderTable(orders)}
     </ScrollView>
-  ) : (
-    <></>
-  );
+  ) : null;
 }

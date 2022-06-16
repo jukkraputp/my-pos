@@ -22,6 +22,7 @@ export default function BasketContent(props: props) {
   const api = props.api;
   const items = props.items;
 
+<<<<<<< HEAD
   const getData = async () => {
     const keys = await AsyncStorage.getAllKeys();
     const getURL = keys.map(async (key) => {
@@ -42,16 +43,40 @@ export default function BasketContent(props: props) {
       setAllImages(images);
     });
   }, []);
+=======
+  useEffect(() => {
+    console.log(Object.keys(items));
+  });
+>>>>>>> 4b9ea680eae1eea7d4b6d055267dc927c4040814
 
   const renderBasket = () => {
     var jsx: JSX.Element[][] = [];
     if (Object.keys(items).length !== 0) {
       Object.keys(items).forEach((itemName: string) => {
         const itemAmount = items[itemName];
+<<<<<<< HEAD
         const index1 = itemName.split("_")[0];
         const index2 = itemName.split("_")[1];
         const key = index1 + "_" + index1 + "-" + index2;
         const image = allImages[key];
+=======
+        var image: string;
+        const index = itemName.split("_")[0] + "_Images";
+        switch (index) {
+          case "Food1_Images":
+            image = allImages.Food1_Images[Number(itemName.split("_")[1])];
+            break;
+          case "Food2_Images":
+            image = allImages.Food2_Images[Number(itemName.split("_")[1])];
+            break;
+          case "FoodSet_Images":
+            image = allImages.FoodSet_Images[Number(itemName.split("_")[1])];
+            break;
+          default:
+            image = "";
+            break;
+        }
+>>>>>>> 4b9ea680eae1eea7d4b6d055267dc927c4040814
         jsx.push([
           <View
             key={itemName}
@@ -86,7 +111,13 @@ export default function BasketContent(props: props) {
                     >
                       <Image
                         style={styles.smallImage}
+<<<<<<< HEAD
                         source={{ uri: allImages["Sign_plus-sign"] }}
+=======
+                        source={{
+                          uri: "https://cdn.discordapp.com/attachments/831568260662820915/985935537309372488/Plus.png",
+                        }}
+>>>>>>> 4b9ea680eae1eea7d4b6d055267dc927c4040814
                       />
                     </TouchableOpacity>
                   )}
@@ -106,7 +137,13 @@ export default function BasketContent(props: props) {
                     >
                       <Image
                         style={styles.smallImage}
+<<<<<<< HEAD
                         source={{ uri: allImages["Sign_minus-sign"] }}
+=======
+                        source={{
+                          uri: "https://cdn.discordapp.com/attachments/831568260662820915/985935562412285992/Minus.png",
+                        }}
+>>>>>>> 4b9ea680eae1eea7d4b6d055267dc927c4040814
                       />
                     </TouchableOpacity>
                   )}

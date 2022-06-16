@@ -5,8 +5,13 @@ import Order from "../components/Content/Order/Order";
 import { order } from "interface";
 import { onSnapshot, collection } from "firebase/firestore";
 import { db } from "../apis/firebase";
+import API from "src/apis/API";
 
-export default function Chef() {
+interface props {
+  
+}
+
+export default function Chef(props: props) {
   const [orders, setOrders] = useState<Array<order>>([]);
 
   useEffect(() => {

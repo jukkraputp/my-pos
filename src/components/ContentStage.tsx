@@ -59,7 +59,7 @@ export default function ContentStage(props: props) {
         onChange={props.updateBasket}
       />
       <Order selectedContent={props.content} chef={false} orders={orders} />
-      <History selectedContent={props.content} history={history} api={api} />
+      <History selectedContent={props.content} history={history} />
     </View>
   );
 }

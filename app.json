@@ -3,12 +3,12 @@
     "name": "my-pos",
     "slug": "my-pos",
     "version": "1.0.0",
-    "orientation": "portrait",
-    "icon": "./src/assets/images/icon.png",
+    "orientation": "landscape",
+    "icon": "./src/assets/icons/shop-icon.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "./src/assets/images/splash.png",
+      "image": "./src/assets/icons/shop-icon.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -23,14 +23,14 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./src/assets/images/adaptive-icon.png",
+        "foregroundImage": "./src/assets/icons/shop-icon.png",
         "backgroundColor": "#ffffff"
       },
       "package": "com.my.pos",
       "googleServicesFile": "./google-services.json"
     },
     "web": {
-      "favicon": "./src/assets/images/favicon.png"
+      "favicon": "./src/assets/icons/shop-icon.png"
     }
   }
 }

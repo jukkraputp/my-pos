@@ -11,16 +11,14 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 interface props {
   selectedContent: string;
   history: order[];
-  api: API;
 }
 
 export default function History(props: props) {
   const [orders, setOrders] = useState(props.history);
   const [allImages, setAllImages] = useState<{ [key: string]: string }>({});
 
-  const api = props.api;
-  const type = "Order";
-  
+  const api = new API();
+
   useEffect(() => {
     api.getImages().then((urls) => {
       var images: { [key: string]: string } = {};
