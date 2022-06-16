@@ -59,7 +59,9 @@ export default function Order(props: props) {
         }}
         key={data[0] + "order_renderRow"}
       >
-        {data.map((image, idx) => {
+        {data.map(async (image, idx) => {
+          const name = await api.getName(ids[image]);
+          const price = await api.getPrice(ids[image]);
           return (
             <View
               style={{
@@ -70,10 +72,10 @@ export default function Order(props: props) {
               key={ids[image] + "order_renderRow_card"}
             >
               <ContentCard
-                name={api.getName(ids[image])}
+                name={name}
                 image={image}
                 ID={ids[image]}
-                price={api.getPrice(ids[image])}
+                price={price}
                 type={ids[image]}
                 onChange={() => {}}
                 key={ids[image]}

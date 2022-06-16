@@ -1,4 +1,4 @@
-import { View } from "react-native";
+import { Text, View } from "react-native";
 import React, { useEffect, useState } from "react";
 import ContentCard from "../ContentCard";
 import API from "../../../apis/API";
@@ -11,7 +11,7 @@ interface props {
 
 export default function Menu(props: props) {
   const [menu, setMenu] = useState<{ [key: string]: string }>({});
-  const [totalItems, setTotalItems] = useState(0);
+  const [JSX, setJSX] = useState<JSX.Element[][] | null>(null);
 
   const api = new API();
 
@@ -34,24 +34,29 @@ export default function Menu(props: props) {
         const uri = url.split("::").at(1);
         images[key] = String(uri);
       });
-      const itemsLength = Object.keys(images).filter((x) =>
-        x.includes(props.type)
-      ).length;
-      setTotalItems(itemsLength);
       setMenu(sortObj(images));
     });
   }, []);
 
-  const renderRow = (itemID: number, flexNumber: number) => {
-    var row = [];
+  const renderRow = async (
+    itemID: number,
+    flexNumber: number,
+    maxID: number
+  ) => {
+    var row: any = [];
 
-    for (let idx = 0; idx < 4; idx++) {
+    for (let idx = 0; idx < 4 && itemID + idx < maxID; idx++) {
+      const name = await api.getName(props.type + "_" + String(itemID + idx));
+      const price = await api.getPrice(props.type + "_" + String(itemID + idx));
+      const image = await api.getImage(
+        props.type + "_" + props.type + "-" + (itemID + idx)
+      );
       row.push(
         <ContentCard
-          name={api.getName(props.type + "_" + (itemID + idx))}
-          image={menu[props.type + "_" + props.type + "-" + (itemID + idx)]}
+          name={name}
+          image={image}
           ID={String(itemID + idx)}
-          price={api.getPrice(props.type + "_" + (itemID + idx))}
+          price={price}
           type={props.type}
           onChange={props.onChange}
           key={props.type + "_" + String(itemID + idx)}
@@ -75,19 +80,33 @@ export default function Menu(props: props) {
     );
   };
 
-  const renderTable = (totalItems: number) => {
+  const renderTable = async (menu: { [key: string]: string }) => {
+    const list = Object.keys(menu)
+      .filter((key) => key.includes(props.type))
+      .filter((key) => key.includes("name"));
     var jsx = [];
     var start = 0;
     const perRow = 4;
-    for (let index = perRow; index < totalItems; index += perRow) {
-      jsx.push([renderRow(start, 0)]);
+    for (let index = perRow; index < list.length; index += perRow) {
+      jsx.push([await renderRow(start, 0, list.length)]);
       start = index;
     }
-    jsx.push([renderRow(start, perRow - (Object.values(menu).length - start))]);
+    jsx.push([
+      await renderRow(start, perRow - (list.length - start), list.length),
+    ]);
     return jsx;
   };
 
-  return (
+  const generateJSX = async () => {
+    const jsx = await renderTable(menu);
+    setJSX(jsx);
+  };
+
+  useEffect(() => {
+    generateJSX();
+  }, [menu]);
+
+  return !!JSX ? (
     <View
       style={[
         props.selectedContent === props.type
@@ -95,7 +114,7 @@ export default function Menu(props: props) {
           : { display: "none" },
       ]}
     >
-      {renderTable(totalItems)}
+      {JSX}
     </View>
-  );
+  ) : null;
 }

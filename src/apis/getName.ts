@@ -1,40 +1,6 @@
-const map: { [key: string]: string } = {
-    Food1_0: "French Fried",
-    Food1_1: "ไก้พริกไทยดำ",
-    Food1_2: "ไก่ BBQ",
-    Food1_3: "ไก่ Spicy",
-    Food1_4: "หมูพริกไทยดำ",
-    Food1_5: "หมู BBQ",
-    Food1_6: "Porkchop พริกไทยดำ",
-    Food1_7: "Porkchop BBQ",
-    Food1_8: "สันคอหมูพริกไทยดำ",
-    Food1_9: "สันคอหมู BBQ",
-    Food1_10: "เนื้อพริกไทยดำ",
-    Food1_11: "เนื้อ BBQ",
-    Food1_12: "ปลาดอลลี่",
-    Food1_13: "ปลาแซลมอน",
-    Food1_14: "ไส้กรอก",
-    Food1_15: "สลัดอกไก่",
-    Food1_16: "สลัดหมูย่าง",
-    Food1_17: "สลัดปลาดอลลี่",
-    Food1_18: "สลัดทูน่า",
-    Food1_19: "สลัดผักรวม",
-    Food1_20: "สลัดกุ้ง",
-    Food2_0: "น้ำส้มปั่น",
-    Food2_1: "น้ำมะนาวปั่น",
-    Food2_2: "น้ำแอปเปิ้ลปั่น",
-    Food2_3: "",
-    Food2_4: "",
-    Food2_5: "",
-    FoodSet_0: "Set 1",
-    FoodSet_1: "Set 2",
-    FoodSet_2: "Set 3",
-    FoodSet_3: "Set 4",
-    FoodSet_4: "Set 5",
-    FoodSet_5: "Set 6",
-    FoodSet_6: "Set 7",
-}
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export default function getName(item: string): string {
-    return map[item];
+export default async function getName(item: string) {
+    const res = await AsyncStorage.getItem(item + '_name')
+    return res
 }

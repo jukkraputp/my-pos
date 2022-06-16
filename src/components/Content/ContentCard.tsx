@@ -1,5 +1,5 @@
 import { View, Text, TouchableOpacity, Image, StyleSheet } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 
 interface props {
   name: string;

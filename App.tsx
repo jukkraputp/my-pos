@@ -10,6 +10,7 @@ import Reception from "./src/screens/Reception";
 import Chef from "./src/screens/Chef";
 import Login from "./src/screens/Login";
 import API from "./src/apis/API";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 async function changeScreenOrientation() {
   await ScreenOrientation.lockAsync(
@@ -29,6 +30,16 @@ export default function App() {
 
   useEffect(() => {
     changeScreenOrientation();
+    AsyncStorage.clear().then(() => {
+      api.saveData();
+    });
+    /* AsyncStorage.getAllKeys().then((keys) => {
+      keys.forEach(async (key) => {
+        if (key.includes("name") || key.includes("price")) {
+          const data = await AsyncStorage.getItem(key);
+        }
+      });
+    }); */
   }, []);
 
   if (isLoadingComplete) {
