@@ -16,8 +16,7 @@ import MyModal from "./MyModal";
 import API from "../apis/API";
 
 interface props {
-  api: API;
-  setModalVisible: Function;
+  selectedContent: string;
 }
 
 const optionList = ["edit", "logout"];
@@ -31,8 +30,9 @@ export default function Option(props: props) {
   const [selectedOption, setSelectedOption] = useState(undefined);
   const [admin, setAdmin] = useState(false);
   const [password, setPassword] = useState("");
+  const [modalVisible, setModalVisible] = useState(false);
 
-  const api = props.api;
+  const api = new API();
 
   const checkPassword = () => {
     if (password === "228115") {
@@ -49,8 +49,8 @@ export default function Option(props: props) {
         {selectedOption === "edit" && !admin && (
           <MyModal
             mode={undefined}
-            modalVisible={true}
-            setModalVisible={props.setModalVisible}
+            modalVisible={modalVisible}
+            setModalVisible={setModalVisible}
             title={"Enter Password"}
             items={{}}
             animation={"none"}
@@ -87,15 +87,24 @@ export default function Option(props: props) {
     );
   };
 
-  const optionSelect = (option: string) => {};
+  const optionSelect = (option: string) => {
+    console.log(option);
+    if (option === "edit") {
+    }
+  };
 
   const renderOptions = () => {
     var jsx: JSX.Element[] = [];
     optionList.map((option, index) => {
       const image = optionImages[option];
       jsx.push(
-        <TouchableOpacity onPress={() => optionSelect(option)}>
-          <Image source={{ uri: image }} />
+        <TouchableOpacity
+          style={styles.optionButton}
+          onPress={() => optionSelect(option)}
+          key={option}
+        >
+          <Image style={styles.optionImage} source={{ uri: image }} />
+          <Text style={styles.textButton}>go to {option}</Text>
         </TouchableOpacity>
       );
     });
@@ -103,7 +112,13 @@ export default function Option(props: props) {
   };
 
   return (
-    <View>
+    <View
+      style={
+        props.selectedContent === "Option"
+          ? { display: "flex" }
+          : { display: "none" }
+      }
+    >
       {renderOptions()}
       {optionController()}
     </View>
@@ -150,9 +165,24 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     zIndex: 25,
   },
+  loginImage: {
+    height: 45,
+    width: 350,
+  },
+  optionButton: {
+    backgroundColor: "darkorange",
+    borderRadius: 5,
+    height: 300,
+    width: 300,
+    marginTop: 10,
+    alignItems: "center",
+    justifyContent: "center",
+    zIndex: 25,
+  },
+  optionImage: { height: 300, width: 300 },
   textButton: {
     textAlign: "center",
     fontWeight: "bold",
-    fontSize: 16,
+    fontSize: 36,
   },
 });

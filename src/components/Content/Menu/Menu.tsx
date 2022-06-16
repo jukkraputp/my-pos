@@ -1,37 +1,64 @@
 import { View } from "react-native";
 import React, { useEffect, useState } from "react";
 import ContentCard from "../ContentCard";
-import API from "src/apis/API";
+import API from "../../../apis/API";
 
 interface props {
+  selectedContent: string;
   type: string;
   onChange: Function;
-  api: API;
 }
 
 export default function Menu(props: props) {
-  const [menu, setMenu] = useState<any[]>([]);
+  const [menu, setMenu] = useState<{ [key: string]: string }>({});
+  const [totalItems, setTotalItems] = useState(0);
 
-  const api = props.api;
+  const api = new API();
 
-  const allImages = api.allImages;
+  const sortObj = (obj: { [key: string]: any }) => {
+    const sorted = Object.keys(obj)
+      .sort()
+      .reduce((accumulator: any, key: string) => {
+        accumulator[key] = obj[key];
+
+        return accumulator;
+      }, {});
+    return sorted;
+  };
 
   useEffect(() => {
-    const index = props.type + "_Images";
-    switch (index) {
-      case "Food1_Images":
-        setMenu(allImages.Food1_Images);
-        break;
-      case "Food2_Images":
-        setMenu(allImages.Food2_Images);
-        break;
-      case "FoodSet_Images":
-        setMenu(allImages.FoodSet_Images);
-        break;
-    }
-  }, [props.type]);
+    api.getImages().then((urls) => {
+      var images: { [key: string]: string } = {};
+      urls.map((url) => {
+        const key = String(url.split("::").at(0));
+        const uri = url.split("::").at(1);
+        images[key] = String(uri);
+      });
+      const itemsLength = Object.keys(images).filter((x) =>
+        x.includes(props.type)
+      ).length;
+      setTotalItems(itemsLength);
+      setMenu(sortObj(images));
+    });
+  }, []);
 
-  const renderRow = (data: any[], itemID: number, flexNumber: number) => {
+  const renderRow = (itemID: number, flexNumber: number) => {
+    var row = [];
+
+    for (let idx = 0; idx < 4; idx++) {
+      row.push(
+        <ContentCard
+          name={api.getName(props.type + "_" + (itemID + idx))}
+          image={menu[props.type + "_" + props.type + "-" + (itemID + idx)]}
+          ID={String(itemID + idx)}
+          price={api.getPrice(props.type + "_" + (itemID + idx))}
+          type={props.type}
+          onChange={props.onChange}
+          key={props.type + "_" + String(itemID + idx)}
+          from={"Menu"}
+        />
+      );
+    }
     return (
       <View
         style={{
@@ -42,38 +69,33 @@ export default function Menu(props: props) {
         }}
         key={itemID}
       >
-        {data.map((image, idx) => {
-          return (
-            <ContentCard
-              name={api.getName(props.type + "_" + (itemID + idx))}
-              image={image}
-              ID={String(itemID + idx)}
-              price={api.getPrice(props.type + "_" + (itemID + idx))}
-              type={props.type}
-              onChange={props.onChange}
-              key={props.type + "_" + String(itemID + idx)}
-              from={"Menu"}
-            />
-          );
-        })}
+        {row}
         <View style={{ flex: flexNumber }} />
       </View>
     );
   };
 
-  const renderTable = () => {
+  const renderTable = (totalItems: number) => {
     var jsx = [];
     var start = 0;
     const perRow = 4;
-    for (let index = perRow; index < menu.length; index += perRow) {
-      jsx.push([renderRow(menu.slice(start, index), start, 0)]);
+    for (let index = perRow; index < totalItems; index += perRow) {
+      jsx.push([renderRow(start, 0)]);
       start = index;
     }
-    jsx.push([
-      renderRow(menu.slice(start), start, perRow - (menu.length - start)),
-    ]);
+    jsx.push([renderRow(start, perRow - (Object.values(menu).length - start))]);
     return jsx;
   };
 
-  return <View>{renderTable()}</View>;
+  return (
+    <View
+      style={[
+        props.selectedContent === props.type
+          ? { display: "flex" }
+          : { display: "none" },
+      ]}
+    >
+      {renderTable(totalItems)}
+    </View>
+  );
 }

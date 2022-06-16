@@ -1,5 +1,7 @@
 import { storage } from "../apis/firebase";
 import { getDownloadURL, ref } from "firebase/storage";
+<<<<<<< HEAD
+=======
 
 var urlList: any[] = []
 var index = 0
@@ -37,27 +39,20 @@ const Food1_17 = require("../assets/images/Food1/Food1-17.jpg");
 const Food1_18 = require("../assets/images/Food1/Food1-18.jpg");
 const Food1_19 = require("../assets/images/Food1/Food1-19.jpg");
 const Food1_20 = require("../assets/images/Food1/Food1-20.jpg");
+>>>>>>> 4b9ea680eae1eea7d4b6d055267dc927c4040814
 
-export default [
-  Food1_0,
-  Food1_1,
-  Food1_2,
-  Food1_3,
-  Food1_4,
-  Food1_5,
-  Food1_6,
-  Food1_7,
-  Food1_8,
-  Food1_9,
-  Food1_10,
-  Food1_11,
-  Food1_12,
-  Food1_13,
-  Food1_14,
-  Food1_15,
-  Food1_16,
-  Food1_17,
-  Food1_18,
-  Food1_19,
-  Food1_20,
-];
+var Food1_Images: string[] = []
+var index = 0
+
+while (true) {
+  const storageRef = ref(storage, `Food1/Food1-${index}.jpg`)
+  getDownloadURL(storageRef).then((url) => {
+    Food1_Images.push(url)
+  }).catch((err) => {
+    console.log(err)
+  })
+  index += 1
+  if (index === 0) break
+}
+
+export default Food1_Images

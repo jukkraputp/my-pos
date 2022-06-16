@@ -7,9 +7,9 @@ import {
   Dimensions,
   StyleSheet,
 } from "react-native";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import API from "../../apis/API";
-
+import AsyncStorage from "@react-native-async-storage/async-storage";
 interface props {
   updateBasket: Function;
   items: { [key: string]: any };
@@ -18,35 +18,40 @@ interface props {
 }
 
 export default function BasketContent(props: props) {
+  const [allImages, setAllImages] = useState<{ [key: string]: string }>({});
   const api = props.api;
-  const allImages = api.allImages;
   const items = props.items;
 
+  const getData = async () => {
+    const keys = await AsyncStorage.getAllKeys();
+    const getURL = keys.map(async (key) => {
+      const url = String(await AsyncStorage.getItem(key));
+      return `${key}::${url}`;
+    });
+    return Promise.all(getURL);
+  };
+
   useEffect(() => {
-    console.log(Object.keys(items));
-  });
+    getData().then((urls) => {
+      var images: { [key: string]: string } = {};
+      urls.map((url) => {
+        const key = String(url.split("::").at(0));
+        const uri = url.split("::").at(1);
+        images[key] = String(uri);
+      });
+      setAllImages(images);
+    });
+  }, []);
 
   const renderBasket = () => {
     var jsx: JSX.Element[][] = [];
     if (Object.keys(items).length !== 0) {
       Object.keys(items).forEach((itemName: string) => {
         const itemAmount = items[itemName];
-        var image: string;
-        const index = itemName.split("_")[0] + "_Images";
-        switch (index) {
-          case "Food1_Images":
-            image = allImages.Food1_Images[Number(itemName.split("_")[1])];
-            break;
-          case "Food2_Images":
-            image = allImages.Food2_Images[Number(itemName.split("_")[1])];
-            break;
-          case "FoodSet_Images":
-            image = allImages.FoodSet_Images[Number(itemName.split("_")[1])];
-            break;
-          default:
-            image = "";
-            break;
-        }
+        const index1 = itemName.split("_")[0];
+        const index2 = itemName.split("_")[1];
+        const key = index1 + "_" + index1 + "-" + index2;
+        const image = allImages[key];
         jsx.push([
           <View
             key={itemName}
@@ -81,9 +86,7 @@ export default function BasketContent(props: props) {
                     >
                       <Image
                         style={styles.smallImage}
-                        source={{
-                          uri: "https://cdn.discordapp.com/attachments/831568260662820915/985935537309372488/Plus.png",
-                        }}
+                        source={{ uri: allImages["Sign_plus-sign"] }}
                       />
                     </TouchableOpacity>
                   )}
@@ -103,9 +106,7 @@ export default function BasketContent(props: props) {
                     >
                       <Image
                         style={styles.smallImage}
-                        source={{
-                          uri: "https://cdn.discordapp.com/attachments/831568260662820915/985935562412285992/Minus.png",
-                        }}
+                        source={{ uri: allImages["Sign_minus-sign"] }}
                       />
                     </TouchableOpacity>
                   )}

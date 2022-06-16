@@ -21,7 +21,7 @@ export default function Navbar(props: props) {
   }, [props.navbarList]);
 
   return (
-    <View style={{ display: "flex", backgroundColor: "darkgray", flex: 5 }}>
+    <View style={{ display: "flex", backgroundColor: "darkgray", flex: 6 }}>
       {[...Array(navbarList.length).keys()].map((index) => {
         return (
           <NavbarController

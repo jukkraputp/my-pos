@@ -8,13 +8,12 @@ interface props {
   updateBasket: Function;
   clearBasket: Function;
   confirmOrder: Function;
-  api: API;
 }
 
 export default function Basket(props: props) {
   const [items, setItems] = useState({});
 
-  const api = props.api;
+  const api = new API();
 
   const maxHeight = Dimensions.get("screen").height;
 
@@ -61,7 +60,7 @@ export default function Basket(props: props) {
           >
             <Image
               style={{ width: 25, height: 25 }}
-              source={require("../assets/icons/icon-close-512.webp")}
+              source={require("../assets/icons/close-sign.svg")}
             />
           </TouchableOpacity>
         )}

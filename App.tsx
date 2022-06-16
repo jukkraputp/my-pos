@@ -10,9 +10,6 @@ import Reception from "./src/screens/Reception";
 import Chef from "./src/screens/Chef";
 import Login from "./src/screens/Login";
 import API from "./src/apis/API";
-import { Platform } from "react-native";
-import { storage } from "./src/apis/firebase";
-import { getDownloadURL, ref } from "firebase/storage";
 
 async function changeScreenOrientation() {
   await ScreenOrientation.lockAsync(
@@ -21,12 +18,12 @@ async function changeScreenOrientation() {
 }
 
 export default function App() {
-  const [auth, setAuth] = useState<boolean | string>(false);
+  const [auth, setAuth] = useState<boolean | string>("waiter" /* false */);
 
   const api = new API();
 
-  const isLoadingComplete = useCachedResources(api);
-  const colorScheme = useColorScheme();
+  const isLoadingComplete = useCachedResources();
+  // const colorScheme = useColorScheme();
 
   const shopName = "Steak Station";
 
@@ -34,17 +31,15 @@ export default function App() {
     changeScreenOrientation();
   }, []);
 
-  if (!isLoadingComplete) {
-    return null;
-  } else {
+  if (isLoadingComplete) {
     switch (auth) {
       case "waiter":
       case "reception":
-        return <Reception api={api} />;
+        return <Reception />;
       case "chef":
-        return <Chef api={api} />;
+        return <Chef />;
       default:
-        return <Login api={api} name={shopName} setAuth={setAuth} />;
+        return <Login name={shopName} setAuth={setAuth} />;
     }
-  }
+  } else return null;
 }

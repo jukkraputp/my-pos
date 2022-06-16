@@ -7,7 +7,6 @@ export const signList = [
     'minus',
     'close'
 ]
-var index = 0
 
 signList.map((sign) => {
     try {

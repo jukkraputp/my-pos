@@ -23,9 +23,9 @@ const map: { [key: string]: number } = {
     Food2_0: 30,
     Food2_1: 30,
     Food2_2: 30,
-    Food2_3: 100,
+    /* Food2_3: 100,
     Food2_4: 100,
-    Food2_5: 100,
+    Food2_5: 100, */
     FoodSet_0: 150,
     FoodSet_1: 200,
     FoodSet_2: 250,

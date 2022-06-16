@@ -9,29 +9,24 @@ import {
   TextInput,
   Keyboard,
   TouchableOpacity,
-  Dimensions,
+  Alert,
 } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
-import MyModal from "../components/MyModal";
-import API from "../apis/API";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import API from "src/apis/API";
 
 interface props {
   name: string;
   setAuth: Function;
-  api: API;
 }
 
 export default function Login(props: props) {
   const [username, setUsername] = useState("waiter");
   const [password, setPassword] = useState("123456789");
-  const [alert, setAlert] = useState(false);
 
   const passwordRef = useRef(null);
 
-  const api = props.api;
-
   const onLogin = () => {
-    console.log(username + "@gmail.com", password);
     var loggedIn = false;
     switch (username) {
       case "waiter":
@@ -50,38 +45,9 @@ export default function Login(props: props) {
           props.setAuth("chef");
         }
       default:
-        if (!loggedIn) setAlert(true);
+        if (!loggedIn) Alert.alert("test");
         return;
     }
-  };
-
-  const setModalVisible = (visible: boolean) => {
-    setAlert(visible);
-  };
-
-  const renderAlert = () => {
-    return (
-      <View
-        style={{
-          position: "absolute",
-          width: Dimensions.get("screen").width,
-          height: Dimensions.get("screen").height,
-          backgroundColor: "rgba(52, 52, 52, 0.8)",
-        }}
-      >
-        <MyModal
-          modalVisible={true}
-          setModalVisible={setModalVisible}
-          animation={"fade"}
-          title={"Login failed"}
-          mode={undefined}
-          items={{}}
-          api={api}
-        >
-          <Text>Wrong username or password</Text>
-        </MyModal>
-      </View>
-    );
   };
 
   return (
@@ -115,7 +81,6 @@ export default function Login(props: props) {
           </View>
         </View>
       </KeyboardAvoidingView>
-      {alert && renderAlert()}
     </SafeAreaView>
   );
 }

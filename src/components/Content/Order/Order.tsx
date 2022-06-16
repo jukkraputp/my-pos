@@ -13,18 +13,31 @@ import {
 import { db } from "../../../apis/firebase";
 import Theme from "../../../constants/Theme";
 import { order } from "interface";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 interface props {
+  selectedContent: string;
   orders: Array<order>;
   chef: boolean;
-  api: API;
 }
 
 export default function Order(props: props) {
   const [orders, setOrders] = useState<Array<order>>([]);
+  const [allImages, setAllImages] = useState<{ [key: string]: string }>({});
 
-  const api = props.api;
-  const allImages = api.allImages;
+  const api = new API();
+
+  useEffect(() => {
+    api.getImages().then((urls) => {
+      var images: { [key: string]: string } = {};
+      urls.map((url) => {
+        const key = String(url.split("::").at(0));
+        const uri = url.split("::").at(1);
+        images[key] = String(uri);
+      });
+      setAllImages(images);
+    });
+  }, []);
 
   useEffect(() => {
     if (!!props.orders) setOrders(props.orders);
@@ -166,17 +179,10 @@ export default function Order(props: props) {
         Object.keys(obj.foods)
           .sort()
           .map((food) => {
-            var image: any;
-            const index = food.split("_")[0] + "_Images";
-            switch (index) {
-              case "Food1_Images":
-                image = allImages.Food1_Images[Number(food.split("_")[1])];
-                break;
-              case "Food2_Images":
-                image = allImages.Food2_Images[Number(food.split("_")[1])];
-              case "Food3_Images":
-                image = allImages.FoodSet_Images[Number(food.split("_")[1])];
-            }
+            const index1 = food.split("_")[0];
+            const index2 = food.split("_")[1];
+            const key = index1 + "_" + index1 + "-" + index2;
+            const image = allImages[key];
             ids[image] = food;
             amounts[image] = obj.foods[food];
             menu.push(image);
@@ -257,7 +263,17 @@ export default function Order(props: props) {
   };
 
   return orders.length !== 0 ? (
-    <ScrollView showsHorizontalScrollIndicator={false}>
+    <ScrollView
+      style={[
+        {
+          backgroundColor: "white",
+        },
+        props.selectedContent === "Order"
+          ? { display: "flex" }
+          : { display: "none" },
+      ]}
+      showsHorizontalScrollIndicator={false}
+    >
       {renderTable(orders)}
     </ScrollView>
   ) : null;

@@ -1,12 +1,9 @@
 import { View, Text, TouchableOpacity } from "react-native";
 import React from "react";
-import { auth } from "../apis/firebase";
 import Theme from "../constants/Theme";
 
 export default function Logout() {
-  const onLogout = () => {
-    auth.signOut();
-  };
+  const onLogout = () => {};
 
   return (
     <View>
