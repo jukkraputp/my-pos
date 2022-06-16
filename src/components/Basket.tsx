@@ -19,6 +19,7 @@ export default function Basket(props: props) {
   const maxHeight = Dimensions.get("screen").height;
 
   useEffect(() => {
+    console.log(props.basket);
     setItems(props.basket);
   }, [props.basket]);
 

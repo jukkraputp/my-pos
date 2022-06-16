@@ -9,9 +9,7 @@ import Navigation from "./src/navigation";
 import Reception from "./src/screens/Reception";
 import Chef from "./src/screens/Chef";
 import Login from "./src/screens/Login";
-import { onAuthStateChanged } from "firebase/auth";
 import API from "./src/apis/API";
-import { Platform } from "react-native";
 
 async function changeScreenOrientation() {
   await ScreenOrientation.lockAsync(
@@ -19,39 +17,23 @@ async function changeScreenOrientation() {
   );
 }
 
+const imagesType = ["Food1", "Food2", "FoodSet", "Sign"];
+
 export default function App() {
-  const [auth, setAuth] = useState<boolean | string>(
-    Platform.OS === "android" ? "waiter" : "chef"
-  );
+  const [auth, setAuth] = useState<boolean | string>("waiter" /* false */);
 
   const api = new API();
 
-  const isLoadingComplete = useCachedResources(api);
-  const colorScheme = useColorScheme();
+  const isLoadingComplete = useCachedResources();
+  // const colorScheme = useColorScheme();
 
   const shopName = "Steak Station";
 
   useEffect(() => {
     changeScreenOrientation();
-
-    /* onAuthStateChanged(firebaseAuth, (user: any) => {
-      if (user) {
-        const mode = user.email.split("@")[0];
-        if (mode === "waiter" || mode === "reception" || mode === "chef") {
-          console.log(mode);
-          setAuth(mode);
-        } else {
-          firebaseAuth.signOut();
-        }
-      } else {
-        setAuth(false);
-      }
-    }); */
   }, []);
 
-  if (!isLoadingComplete) {
-    return null;
-  } else {
+  if (isLoadingComplete) {
     switch (auth) {
       case "waiter":
       case "reception":
@@ -59,7 +41,7 @@ export default function App() {
       case "chef":
         return <Chef />;
       default:
-        return <Login name={shopName} />;
+        return <Login name={shopName} setAuth={setAuth} />;
     }
-  }
+  } else return null;
 }

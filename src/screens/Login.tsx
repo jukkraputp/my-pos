@@ -9,30 +9,45 @@ import {
   TextInput,
   Keyboard,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
-import { auth } from "../apis/firebase";
-import {
-  inMemoryPersistence,
-  setPersistence,
-  signInWithEmailAndPassword,
-  signInWithPopup,
-} from "firebase/auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import API from "src/apis/API";
 
 interface props {
   name: string;
+  setAuth: Function;
 }
 
 export default function Login(props: props) {
   const [username, setUsername] = useState("waiter");
   const [password, setPassword] = useState("123456789");
-  const [alert, setAlert] = useState(false);
 
   const passwordRef = useRef(null);
 
   const onLogin = () => {
-    console.log(username + "@gmail.com", password);
+    var loggedIn = false;
+    switch (username) {
+      case "waiter":
+        if (password === "123456789") {
+          loggedIn = true;
+          props.setAuth("waiter");
+        }
+      case "reception":
+        if (password === "1q2w3e4r") {
+          loggedIn = true;
+          props.setAuth("reception");
+        }
+      case "chef":
+        if (password === "987654321") {
+          loggedIn = true;
+          props.setAuth("chef");
+        }
+      default:
+        if (!loggedIn) Alert.alert("test");
+        return;
+    }
   };
 
   return (
@@ -66,7 +81,6 @@ export default function Login(props: props) {
           </View>
         </View>
       </KeyboardAvoidingView>
-      {alert && <></>}
     </SafeAreaView>
   );
 }

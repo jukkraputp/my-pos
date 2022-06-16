@@ -1,24 +1,31 @@
 import getPrice from "./getPrice";
 import ItemList from "./ItemList";
-import Food1_Images from "../constants/Food1_Images";
-import Food2_Images from "../constants/Food2_Images";
-import FoodSet_Images from "../constants/FoodSet_Images";
 import Icon from "../constants/Icon";
 import getOrders from "./getOrders";
 import getName from "./getName";
+import { FirebaseStorage, getDownloadURL, listAll, ref, StorageReference } from "firebase/storage";
+import { storage } from "./firebase";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { CacheManager } from "react-native-expo-image-cache"
 
 export default class API {
-    allImages
 
     constructor() {
-        this.allImages = { Food1_Images, Food2_Images, FoodSet_Images }
+
     }
+
+    getImages = async () => {
+        const keys = await AsyncStorage.getAllKeys();
+        const getURL = keys.map(async (key) => {
+            const url = String(await AsyncStorage.getItem(key));
+            return `${key}::${url}`;
+        });
+        return Promise.all(getURL);
+    };
 
     getOrders = async () => {
         return await getOrders();
     };
-
-    cacheImages = () => { };
 
     getIcons = () => {
         return Icon;

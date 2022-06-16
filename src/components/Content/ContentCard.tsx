@@ -5,7 +5,7 @@ interface props {
   name: string;
   ID: string;
   price: number;
-  image: any;
+  image: string;
   type: string;
   onChange: Function;
   from: string;
@@ -22,10 +22,14 @@ export default function ContentCard(props: props) {
       {props.from === "Menu" ? (
         <TouchableOpacity
           style={{ width: 100, height: 140, alignSelf: "center" }}
-          onPress={() => onChange(props.type + "_" + String(props.ID), "+ ")}
+          onPress={() => onChange(props.type + "_" + String(props.ID), "+")}
           disabled={disabled}
         >
-          <Image style={{ width: 100, height: 100 }} source={props.image} />
+          <Image
+            style={{ width: 100, height: 100 }}
+            source={{ uri: props.image }}
+            resizeMethod="resize"
+          />
           <Text style={{ textAlign: "center", height: 20 }}>{props.name}</Text>
           <Text style={{ textAlign: "center", height: 20 }}>
             {props.price} บาท
@@ -33,7 +37,11 @@ export default function ContentCard(props: props) {
         </TouchableOpacity>
       ) : (
         <View style={{ width: 100, height: 140, alignSelf: "center" }}>
-          <Image style={{ width: 100, height: 100 }} source={props.image} />
+          <Image
+            style={{ width: 100, height: 100 }}
+            source={{ uri: props.image }}
+            resizeMethod="resize"
+          />
           <Text
             style={{
               textAlign: "center",

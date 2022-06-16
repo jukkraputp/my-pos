@@ -30,6 +30,7 @@ export default function ContentStage(props: props) {
       });
       setOrders(temp);
     });
+
     const listenHistory = onSnapshot(collection(db, "History"), (snapShot) => {
       var temp: Array<order> = [];
       snapShot.docs.forEach((doc) => {
@@ -40,32 +41,25 @@ export default function ContentStage(props: props) {
     });
   }, []);
 
-  switch (props.content) {
-    case "Food1":
-    case "Food2":
-    case "FoodSet":
-      return (
-        <View>
-          <Menu type={props.content} onChange={props.updateBasket} api={api} />
-        </View>
-      );
-    case "Order":
-      return (
-        <View>
-          <Order chef={false} orders={orders} />
-        </View>
-      );
-    case "History":
-      return (
-        <View>
-          <History history={history} />
-        </View>
-      );
-    default:
-      return (
-        <View>
-          <Text>MenuType: no props</Text>
-        </View>
-      );
-  }
+  return (
+    <View>
+      <Menu
+        selectedContent={props.content}
+        type={"Food1"}
+        onChange={props.updateBasket}
+      />
+      <Menu
+        selectedContent={props.content}
+        type={"Food2"}
+        onChange={props.updateBasket}
+      />
+      <Menu
+        selectedContent={props.content}
+        type={"FoodSet"}
+        onChange={props.updateBasket}
+      />
+      <Order selectedContent={props.content} chef={false} orders={orders} />
+      <History selectedContent={props.content} history={history} api={api} />
+    </View>
+  );
 }

@@ -22,7 +22,7 @@ export default function Chef() {
   return (
     <View>
       <View>
-        <Order orders={orders} chef={true} />
+        <Order selectedContent="Order" orders={orders} chef={true} />
       </View>
       <Logout />
     </View>
