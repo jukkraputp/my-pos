@@ -49,6 +49,7 @@ export default function History(props: props) {
           marginTop: 5,
           justifyContent: "flex-start",
         }}
+        key={"History_Row_" + data[0]}
       >
         {data.map((image, idx) => {
           return (
@@ -89,7 +90,6 @@ export default function History(props: props) {
   };
 
   const renderTable = (orders: order[]) => {
-    console.log(orders);
     var JSX: any[] = [];
     var startLine = false;
     orders
@@ -125,6 +125,7 @@ export default function History(props: props) {
                   backgroundColor: "black",
                   alignItems: "center",
                 }}
+                key={"History_Start_Line"}
               >
                 <View
                   style={{
@@ -154,7 +155,10 @@ export default function History(props: props) {
         ]);
         countRow++;
         row.push(
-          <View style={{ flexDirection: "row" }}>
+          <View
+            style={{ flexDirection: "row" }}
+            key={"History_Option_" + obj.date}
+          >
             <View style={{ flex: 9 }}>{jsx}</View>
             <View style={{ flex: 0.01, backgroundColor: "black" }}></View>
             <View style={{ flex: 1 }}>

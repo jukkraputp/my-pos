@@ -11,7 +11,6 @@ import Navbar from "../components/Navbar";
 import ContentStage from "../components/ContentStage";
 import Basket from "../components/Basket";
 import MyModal from "../components/MyModal";
-import { getAuth } from "firebase/auth";
 import { db } from "../apis/firebase";
 import { addDoc, collection } from "firebase/firestore";
 
@@ -31,7 +30,7 @@ export default class Reception extends React.Component<props, state> {
   constructor(props: props) {
     super(props);
     this.state = {
-      content: "History",
+      content: "Option",
       basket: {},
       confirmingOrder: false,
     };
@@ -44,14 +43,18 @@ export default class Reception extends React.Component<props, state> {
       "Option",
     ];
     this.showCurrent =
-      this.state.content !== "Order" && this.state.content !== "History";
+      this.state.content !== "Order" &&
+      this.state.content !== "History" &&
+      this.state.content !== "Option";
     this.API = new API();
   }
 
   toggleOrder = () => {};
 
   changeContent = (contentName: string) => {
-    contentName === "Order" || contentName === "History"
+    contentName === "Order" ||
+    contentName === "History" ||
+    contentName === "Option"
       ? (this.showCurrent = false)
       : (this.showCurrent = true);
     this.setState({ content: contentName });
@@ -135,7 +138,6 @@ export default class Reception extends React.Component<props, state> {
                 content={this.state.content}
                 updateBasket={this.updateBasket}
                 toggleOrder={this.toggleOrder}
-                api={this.API}
               />
             </ScrollView>
           </View>
@@ -149,7 +151,6 @@ export default class Reception extends React.Component<props, state> {
                 updateBasket={this.updateBasket}
                 confirmOrder={this.confirmOrder}
                 clearBasket={this.clearBasket}
-                api={this.API}
               />
             </View>
           )}

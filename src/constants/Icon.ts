@@ -4,5 +4,5 @@ export default [
     require('../assets/icons/shape-star.svg'),
     require('../assets/icons/circle-10.svg'),
     require('../assets/icons/chat-33.svg'),
-    require('../assets/icons/icon-close-512.webp')
+    require('../assets/icons/close-sign.svg')
 ]

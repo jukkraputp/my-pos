@@ -62,7 +62,7 @@ export default function MyModal(props: props) {
               }}
             >
               <Image
-                source={require("../assets/icons/icon-close-512.webp")}
+                source={require("../assets/icons/close-sign.svg")}
                 style={{
                   width: 20,
                   height: 20,

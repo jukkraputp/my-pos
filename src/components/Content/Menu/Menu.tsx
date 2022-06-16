@@ -11,6 +11,7 @@ interface props {
 
 export default function Menu(props: props) {
   const [menu, setMenu] = useState<{ [key: string]: string }>({});
+  const [totalItems, setTotalItems] = useState(0);
 
   const api = new API();
 
@@ -33,6 +34,10 @@ export default function Menu(props: props) {
         const uri = url.split("::").at(1);
         images[key] = String(uri);
       });
+      const itemsLength = Object.keys(images).filter((x) =>
+        x.includes(props.type)
+      ).length;
+      setTotalItems(itemsLength);
       setMenu(sortObj(images));
     });
   }, []);
@@ -70,15 +75,11 @@ export default function Menu(props: props) {
     );
   };
 
-  const renderTable = () => {
+  const renderTable = (totalItems: number) => {
     var jsx = [];
     var start = 0;
     const perRow = 4;
-    for (
-      let index = perRow;
-      index < Object.values(menu).length;
-      index += perRow
-    ) {
+    for (let index = perRow; index < totalItems; index += perRow) {
       jsx.push([renderRow(start, 0)]);
       start = index;
     }
@@ -94,7 +95,7 @@ export default function Menu(props: props) {
           : { display: "none" },
       ]}
     >
-      {renderTable()}
+      {renderTable(totalItems)}
     </View>
   );
 }

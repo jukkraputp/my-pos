@@ -15,7 +15,7 @@ const map: { [key: string]: string } = {
   FoodSet: "Set",
   Order: "Order",
   History: "History",
-  Logout: "Logout",
+  Option: "Option",
 };
 
 interface props {
@@ -65,7 +65,7 @@ export default function NavbarController(props: props) {
 
 const styles = StyleSheet.create({
   defaultStyle: {
-    paddingVertical: 45,
+    paddingVertical: 36,
     paddingHorizontal: 18,
   },
   activeStyle: {

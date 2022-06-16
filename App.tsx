@@ -17,8 +17,6 @@ async function changeScreenOrientation() {
   );
 }
 
-const imagesType = ["Food1", "Food2", "FoodSet", "Sign"];
-
 export default function App() {
   const [auth, setAuth] = useState<boolean | string>("waiter" /* false */);
 
