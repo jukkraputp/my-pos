@@ -30,7 +30,7 @@ export default class Reception extends React.Component<props, state> {
   constructor(props: props) {
     super(props);
     this.state = {
-      content: "Food1",
+      content: "History",
       basket: {},
       confirmingOrder: false,
     };

@@ -49,7 +49,7 @@ export default function Menu(props: props) {
       const name = await api.getName(props.type + "_" + String(itemID + idx));
       const price = await api.getPrice(props.type + "_" + String(itemID + idx));
       const image = await api.getImage(
-        props.type + "_" + props.type + "-" + (itemID + idx)
+        props.type + "_" + props.type + "-" + String(itemID + idx)
       );
       row.push(
         <ContentCard
