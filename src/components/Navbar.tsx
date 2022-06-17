@@ -1,4 +1,4 @@
-import { View, Text } from "react-native";
+import { View, Text, Dimensions } from "react-native";
 import React, { useEffect, useState } from "react";
 import NavbarController from "./Navbar/NavbarController";
 import API from "../apis/API";
@@ -21,7 +21,14 @@ export default function Navbar(props: props) {
   }, [props.navbarList]);
 
   return (
-    <View style={{ display: "flex", backgroundColor: "darkgray", flex: 6 }}>
+    <View
+      style={{
+        display: "flex",
+        backgroundColor: "darkgray",
+        flex: 6,
+        height: Dimensions.get("screen").height,
+      }}
+    >
       {[...Array(navbarList.length).keys()].map((index) => {
         return (
           <NavbarController

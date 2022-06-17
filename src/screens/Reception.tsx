@@ -11,11 +11,13 @@ import Navbar from "../components/Navbar";
 import ContentStage from "../components/ContentStage";
 import Basket from "../components/Basket";
 import MyModal from "../components/MyModal";
-import { db } from "../apis/firebase";
+import { db } from "../config/firebase";
 import { addDoc, collection } from "firebase/firestore";
 import LottieView from "lottie-react-native";
 
-interface props {}
+interface props {
+  setAuth: Function;
+}
 
 interface state {
   content: string;
@@ -125,7 +127,7 @@ export default class Reception extends React.Component<props, state> {
             backgroundColor: "white",
           }}
         >
-          <View style={{ flex: 1 }}>
+          <View style={{ flex: 1, maxHeight: Dimensions.get("screen").height }}>
             <Navbar
               navbarList={this.navbarList}
               onChange={this.changeContent}
@@ -171,6 +173,7 @@ export default class Reception extends React.Component<props, state> {
                 updateBasket={this.updateBasket}
                 toggleOrder={this.toggleOrder}
                 renderComplete={this.renderComplete}
+                setAuth={this.props.setAuth}
               />
             </ScrollView>
           </View>

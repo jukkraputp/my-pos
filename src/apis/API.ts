@@ -14,6 +14,12 @@ export default class API {
 
     }
 
+    logout = async () => {
+        console.log('logout');
+        await AsyncStorage.setItem('Auth', String(null));
+        return;
+    }
+
     private getLastID = async (type: string): Promise<string> => {
         var temp = 0
         const keys = await AsyncStorage.getAllKeys()

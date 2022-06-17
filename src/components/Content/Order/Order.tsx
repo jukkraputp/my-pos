@@ -8,7 +8,7 @@ import {
   doc,
   updateDoc,
 } from "firebase/firestore";
-import { db } from "../../../apis/firebase";
+import { db } from "../../../config/firebase";
 import Theme from "../../../constants/Theme";
 import { order } from "interface";
 import ContentTable from "../ContentTable";
@@ -17,7 +17,7 @@ interface props {
   selectedContent: string;
   orders: Array<order>;
   chef: boolean;
-  renderComplete: Function;
+  renderComplete?: Function;
 }
 
 export default function Order(props: props) {
@@ -130,7 +130,7 @@ export default function Order(props: props) {
   useEffect(() => {
     if (jsxElements.length !== 0 && !renderCompleted) {
       setRenderCompeted(true);
-      props.renderComplete();
+      !!props.renderComplete ? props.renderComplete() : null;
     }
   }, [jsxElements]);
 

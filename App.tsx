@@ -4,19 +4,18 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import * as ScreenOrientation from "expo-screen-orientation";
 
 import useCachedResources from "./src/hooks/useCachedResources";
-import useColorScheme from "./src/hooks/useColorScheme";
-import Navigation from "./src/navigation";
 import Reception from "./src/screens/Reception";
 import Chef from "./src/screens/Chef";
 import Login from "./src/screens/Login";
 import API from "./src/apis/API";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { LogBox } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 LogBox.ignoreLogs([
   "ViewPropTypes will be removed",
   "ColorPropType will be removed",
   "(0 , _idb.openDB)",
+  "Remote debugger",
 ]);
 
 async function changeScreenOrientation() {
@@ -26,7 +25,7 @@ async function changeScreenOrientation() {
 }
 
 export default function App() {
-  const [auth, setAuth] = useState<boolean | string>("waiter" /* false */);
+  const [auth, setAuth] = useState<string | null>(null);
 
   const api = new API();
 
@@ -48,15 +47,21 @@ export default function App() {
         }
       });
     }); */
+    const inititalAuth = async () => {
+      if (auth === null) setAuth(await AsyncStorage.getItem("Auth"));
+    };
+    inititalAuth();
   }, []);
 
   if (isLoadingComplete) {
+    console.log(auth);
+    AsyncStorage.setItem("Auth", String(auth));
     switch (auth) {
       case "waiter":
       case "reception":
-        return <Reception />;
+        return <Reception setAuth={setAuth} />;
       case "chef":
-        return <Chef />;
+        return <Chef setAuth={setAuth} />;
       default:
         return <Login name={shopName} setAuth={setAuth} />;
     }

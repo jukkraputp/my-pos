@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { Image } from 'react-native';
 import { Asset } from 'expo-asset';
 import { getDownloadURL, listAll, ref } from 'firebase/storage';
-import { storage } from '../apis/firebase';
+import { storage } from '../config/firebase';
 
 export default function useCachedResources() {
   const [isLoadingComplete, setLoadingComplete] = useState(false);

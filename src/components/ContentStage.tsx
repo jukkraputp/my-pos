@@ -4,16 +4,17 @@ import Menu from "./Content/Menu/Menu";
 import Order from "./Content/Order/Order";
 import History from "./Content/History/History";
 import { collection, onSnapshot } from "firebase/firestore";
-import { db } from "../apis/firebase";
+import { db } from "../config/firebase";
 import { order } from "interface";
 import API from "../apis/API";
-import Option from "./Option";
+import Option from "./Option/Option";
 
 interface props {
   content: string;
   updateBasket: Function;
   toggleOrder: Function;
   renderComplete: Function;
+  setAuth: Function;
 }
 
 export default function ContentStage(props: props) {
@@ -76,6 +77,7 @@ export default function ContentStage(props: props) {
       <Option
         selectedContent={props.content}
         renderComplete={props.renderComplete}
+        setAuth={props.setAuth}
       />
     </View>
   );

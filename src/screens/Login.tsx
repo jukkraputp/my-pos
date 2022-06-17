@@ -3,17 +3,13 @@ import {
   Text,
   SafeAreaView,
   StyleSheet,
-  TouchableWithoutFeedback,
   KeyboardAvoidingView,
-  Button,
   TextInput,
   Keyboard,
   TouchableOpacity,
   Alert,
 } from "react-native";
-import React, { useEffect, useRef, useState } from "react";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import API from "src/apis/API";
+import React, { useRef, useState } from "react";
 
 interface props {
   name: string;
@@ -21,25 +17,26 @@ interface props {
 }
 
 export default function Login(props: props) {
-  const [username, setUsername] = useState("waiter");
+  const [username, setUsername] = useState("Waiter");
   const [password, setPassword] = useState("123456789");
 
   const passwordRef = useRef(null);
 
   const onLogin = () => {
+    console.log("logging in");
     var loggedIn = false;
     switch (username) {
-      case "waiter":
+      case "Waiter":
         if (password === "123456789") {
           loggedIn = true;
           props.setAuth("waiter");
         }
-      case "reception":
+      case "Reception":
         if (password === "1q2w3e4r") {
           loggedIn = true;
           props.setAuth("reception");
         }
-      case "chef":
+      case "Chef":
         if (password === "987654321") {
           loggedIn = true;
           props.setAuth("chef");
@@ -48,6 +45,10 @@ export default function Login(props: props) {
         if (!loggedIn) Alert.alert("test");
         return;
     }
+  };
+
+  const toPasswordInput = (event: Event) => {
+    console.log(event);
   };
 
   return (
@@ -63,7 +64,9 @@ export default function Login(props: props) {
               onChangeText={(text) => {
                 setUsername(text);
               }}
-              onSubmitEditing={() => Keyboard.dismiss}
+              onSubmitEditing={() => {
+                toPasswordInput;
+              }}
             />
             <TextInput
               ref={passwordRef}
