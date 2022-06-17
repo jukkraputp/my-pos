@@ -7,11 +7,13 @@ interface props {
   selectedContent: string;
   type: string;
   onChange: Function;
+  renderComplete: Function;
 }
 
 export default function Menu(props: props) {
   const [menu, setMenu] = useState<{ [key: string]: string }>({});
-  const [JSX, setJSX] = useState<JSX.Element[][] | null>(null);
+  const [JSX, setJSX] = useState<JSX.Element[][]>([]);
+  const [renderCompleted, setRenderCompeted] = useState(false);
 
   const api = new API();
 
@@ -105,6 +107,13 @@ export default function Menu(props: props) {
   useEffect(() => {
     generateJSX();
   }, [menu]);
+
+  useEffect(() => {
+    if (JSX.length !== 0 && !renderCompleted) {
+      setRenderCompeted(true);
+      props.renderComplete();
+    }
+  }, [JSX]);
 
   return !!JSX ? (
     <View

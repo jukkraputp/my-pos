@@ -11,19 +11,20 @@ import {
 import { db } from "../../../apis/firebase";
 import Theme from "../../../constants/Theme";
 import { order } from "interface";
-import ContentRow from "../ContentRow";
 import ContentTable from "../ContentTable";
 
 interface props {
   selectedContent: string;
   orders: Array<order>;
   chef: boolean;
+  renderComplete: Function;
 }
 
 export default function Order(props: props) {
   const [orders, setOrders] = useState<Array<order>>([]);
   const [allImages, setAllImages] = useState<{ [key: string]: string }>({});
-  const [jsxElements, setJSXElements] = useState<JSX.Element[][] | null>(null);
+  const [jsxElements, setJSXElements] = useState<JSX.Element[][]>([]);
+  const [renderCompleted, setRenderCompeted] = useState(false);
 
   const api = new API();
 
@@ -74,7 +75,7 @@ export default function Order(props: props) {
           alignItems: "center",
           justifyContent: "center",
         }}
-        key={order.date}
+        key={String(order.date)}
       >
         <TouchableOpacity
           style={{
@@ -113,15 +114,25 @@ export default function Order(props: props) {
 
   const setJSX = async () => {
     const childrenFnc = renderOrderOptions;
-    const jsx = await ContentTable({ childrenFnc, allImages, orders });
+    const jsx = await ContentTable({
+      childrenFnc,
+      allImages,
+      orders: orders,
+      from: "Order",
+    });
     setJSXElements(jsx);
   };
 
   useEffect(() => {
-    setJSX();
-  }, [orders]);
+    if (Object.keys(allImages).length !== 0 && orders.length !== 0) setJSX();
+  }, [orders, allImages]);
 
-  useEffect(() => {}, [jsxElements]);
+  useEffect(() => {
+    if (jsxElements.length !== 0 && !renderCompleted) {
+      setRenderCompeted(true);
+      props.renderComplete();
+    }
+  }, [jsxElements]);
 
   return orders.length !== 0 ? (
     <ScrollView

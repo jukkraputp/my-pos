@@ -11,6 +11,13 @@ import Chef from "./src/screens/Chef";
 import Login from "./src/screens/Login";
 import API from "./src/apis/API";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { LogBox } from "react-native";
+
+LogBox.ignoreLogs([
+  "ViewPropTypes will be removed",
+  "ColorPropType will be removed",
+  "(0 , _idb.openDB)",
+]);
 
 async function changeScreenOrientation() {
   await ScreenOrientation.lockAsync(
@@ -30,9 +37,10 @@ export default function App() {
 
   useEffect(() => {
     changeScreenOrientation();
-    AsyncStorage.clear().then(() => {
+    /* AsyncStorage.clear().then(() => {
       api.saveData();
-    });
+    }); */
+    api.saveData();
     /* AsyncStorage.getAllKeys().then((keys) => {
       keys.forEach(async (key) => {
         if (key.includes("name") || key.includes("price")) {

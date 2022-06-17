@@ -8,8 +8,9 @@ import {
   TextInput,
   StyleSheet,
   Alert,
+  Dimensions,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import EditMenu from "./Option/EditMenu";
 import Logout from "./Logout";
 import MyModal from "./MyModal";
@@ -17,9 +18,10 @@ import API from "../apis/API";
 
 interface props {
   selectedContent: string;
+  renderComplete: Function;
 }
 
-const optionList = ["edit", "logout"];
+const optionList = ["edit", "logout", "option3", "option4"];
 const optionImages: { [key: string]: string } = {
   edit: "editImage",
   logout: "logoutImage",
@@ -93,31 +95,60 @@ export default function Option(props: props) {
     }
   };
 
-  const renderOptions = () => {
-    var jsx: JSX.Element[] = [];
-    optionList.map((option, index) => {
+  const renderRow = (options: string[]) => {
+    return options.map((option) => {
       const image = optionImages[option];
-      jsx.push(
+      return (
         <TouchableOpacity
           style={styles.optionButton}
           onPress={() => optionSelect(option)}
-          key={option}
+          key={option + "_button"}
         >
           <Image style={styles.optionImage} source={{ uri: image }} />
           <Text style={styles.textButton}>go to {option}</Text>
         </TouchableOpacity>
       );
     });
+  };
+
+  useEffect(() => {
+    props.renderComplete();
+  }, []);
+
+  const renderOptions = () => {
+    var jsx: JSX.Element[] = [];
+    const perRow = 2;
+    var options: string[] = [];
+    var key = "";
+    optionList.forEach((option, index) => {
+      options.push(option);
+      key += "_" + option;
+      if (options.length === perRow) {
+        jsx.push(
+          <View style={{ flexDirection: "row" }} key={key}>
+            {renderRow(options)}
+          </View>
+        );
+        options = [];
+        key = "";
+      }
+    });
+    if (options.length !== 0 && options.length) {
+      jsx.push(
+        <View style={{ flexDirection: "row" }}>{renderRow(options)}</View>
+      );
+    }
     return jsx;
   };
 
   return (
     <View
-      style={
+      style={[
         props.selectedContent === "Option"
           ? { display: "flex" }
-          : { display: "none" }
-      }
+          : { display: "none" },
+        styles.stageContainer,
+      ]}
     >
       {renderOptions()}
       {optionController()}
@@ -126,6 +157,14 @@ export default function Option(props: props) {
 }
 
 const styles = StyleSheet.create({
+  stageContainer: {
+    maxHeight: Dimensions.get("screen").height,
+    width: "90%",
+    backgroundColor: "black",
+    flexDirection: "column",
+    justifyContent: "space-around",
+    alignSelf: "center",
+  },
   containerView: {
     flex: 1,
     alignItems: "center",
@@ -176,7 +215,7 @@ const styles = StyleSheet.create({
     width: 300,
     marginTop: 10,
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "flex-start",
     zIndex: 25,
   },
   optionImage: { height: 300, width: 300 },

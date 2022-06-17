@@ -15,6 +15,12 @@ export default function ContentCard(props: props) {
   const onChange = props.onChange === undefined ? () => {} : props.onChange;
   const disabled = props.onChange === undefined ? true : false;
 
+/*   useEffect(() => {
+    if (props.from === "Order") {
+      console.log(props);
+    }
+  }); */
+
   return (
     <View style={styles.cardContainer}>
       {props.from === "Menu" ? (

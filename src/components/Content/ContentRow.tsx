@@ -4,10 +4,12 @@ import ContentCard from "./ContentCard";
 import API from "../../apis/API";
 
 interface props {
-  data: any[];
+  data: string[];
   ids: { [key: string]: string };
   flexNumber: number;
   amounts: { [key: string]: number };
+  from: string;
+  date: Date;
 }
 
 export default function ContentRow(props: props) {
@@ -27,12 +29,14 @@ export default function ContentRow(props: props) {
           marginTop: 5,
           justifyContent: "flex-start",
         }}
-        key={data[0] + "order_renderRow"}
+        key={props.date + "_" + data[0] + "_" + props.from + "_renderRow"}
       >
         {await Promise.all(
           data.map(async (image, idx) => {
             const name = await api.getName(ids[image]);
             const price = await api.getPrice(ids[image]);
+            const key =
+              props.date + "_" + name + "_" + props.from + "_renderRow_card";
             return (
               <View
                 style={{
@@ -40,7 +44,7 @@ export default function ContentRow(props: props) {
                   flexDirection: "row",
                   marginRight: 10,
                 }}
-                key={image + "order_renderRow_card"}
+                key={key}
               >
                 <ContentCard
                   name={name}

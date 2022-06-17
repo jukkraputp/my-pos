@@ -13,6 +13,7 @@ import Basket from "../components/Basket";
 import MyModal from "../components/MyModal";
 import { db } from "../apis/firebase";
 import { addDoc, collection } from "firebase/firestore";
+import LottieView from "lottie-react-native";
 
 interface props {}
 
@@ -20,19 +21,22 @@ interface state {
   content: string;
   basket: {};
   confirmingOrder: boolean;
+  renderFinish: boolean;
 }
 
 export default class Reception extends React.Component<props, state> {
   navbarList: Array<string>;
   showCurrent: Boolean;
   API: API;
+  renderCompleted: number;
 
   constructor(props: props) {
     super(props);
     this.state = {
-      content: "History",
+      content: "Order",
       basket: {},
       confirmingOrder: false,
+      renderFinish: false,
     };
     this.navbarList = [
       "Food1",
@@ -42,12 +46,19 @@ export default class Reception extends React.Component<props, state> {
       "History",
       "Option",
     ];
+    this.renderCompleted = 0;
     this.showCurrent =
       this.state.content !== "Order" &&
       this.state.content !== "History" &&
       this.state.content !== "Option";
     this.API = new API();
   }
+
+  renderComplete = (point: number = 1) => {
+    this.renderCompleted += point;
+    if (this.renderCompleted === this.navbarList.length)
+      this.setState({ renderFinish: true });
+  };
 
   toggleOrder = () => {};
 
@@ -128,8 +139,29 @@ export default class Reception extends React.Component<props, state> {
               paddingTop: StatusBar.currentHeight,
             }}
           >
+            <LottieView
+              source={require("../assets/animation/colors-circle-loader.json")}
+              style={[
+                {
+                  width: 450,
+                  height: 450,
+                  alignSelf: "center",
+                  justifyContent: "center",
+                  marginTop: 20,
+                },
+                this.state.renderFinish
+                  ? { display: "none" }
+                  : { display: "flex" },
+              ]}
+              autoPlay
+            />
             <ScrollView
-              style={styles.scrollView}
+              style={[
+                styles.scrollView,
+                this.state.renderFinish
+                  ? { display: "flex" }
+                  : { display: "none" },
+              ]}
               showsHorizontalScrollIndicator={false}
               alwaysBounceVertical={true}
               renderToHardwareTextureAndroid={true}
@@ -138,6 +170,7 @@ export default class Reception extends React.Component<props, state> {
                 content={this.state.content}
                 updateBasket={this.updateBasket}
                 toggleOrder={this.toggleOrder}
+                renderComplete={this.renderComplete}
               />
             </ScrollView>
           </View>

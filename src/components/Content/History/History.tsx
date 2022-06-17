@@ -9,12 +9,14 @@ import ContentTable from "../ContentTable";
 interface props {
   selectedContent: string;
   history: order[];
+  renderComplete: Function;
 }
 
 export default function History(props: props) {
   const [orders, setOrders] = useState(props.history);
   const [allImages, setAllImages] = useState<{ [key: string]: string }>({});
-  const [jsxElements, setJSXElements] = useState<JSX.Element[][] | null>(null);
+  const [jsxElements, setJSXElements] = useState<JSX.Element[][]>([]);
+  const [renderCompleted, setRenderCompeted] = useState(false);
 
   const api = new API();
 
@@ -44,13 +46,25 @@ export default function History(props: props) {
 
   const setJSX = async () => {
     const childrenFnc = renderHistorySummary;
-    const jsx = await ContentTable({ childrenFnc, allImages, orders });
+    const jsx = await ContentTable({
+      childrenFnc,
+      allImages,
+      orders,
+      from: "History",
+    });
     setJSXElements(jsx);
   };
 
   useEffect(() => {
-    setJSX();
-  }, [orders]);
+    if (Object.keys(allImages).length !== 0 && orders.length !== 0) setJSX();
+  }, [orders, allImages]);
+
+  useEffect(() => {
+    if (jsxElements.length !== 0 && !renderCompleted) {
+      props.renderComplete();
+      setRenderCompeted(true);
+    }
+  }, [jsxElements]);
 
   return orders.length !== 0 ? (
     <View
