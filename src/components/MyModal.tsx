@@ -4,7 +4,6 @@ import {
   StyleSheet,
   Modal,
   Pressable,
-  Alert,
   Image,
 } from "react-native";
 import React from "react";
@@ -20,6 +19,8 @@ interface props {
   animation: any;
   children?: React.ReactNode | React.ReactNode[];
   api: API;
+  buttonVisible?: boolean;
+  styles?: {};
 }
 
 export default function MyModal(props: props) {
@@ -27,7 +28,11 @@ export default function MyModal(props: props) {
   const modalVisible = props.modalVisible;
   const mode = props.mode;
 
+  const buttonVisible =
+    props.buttonVisible !== undefined ? props.buttonVisible : true;
+
   const setModalVisible = (visible: boolean, isConfirm = false) => {
+    console.log("check");
     props.setModalVisible(visible, isConfirm);
   };
 
@@ -35,15 +40,35 @@ export default function MyModal(props: props) {
     switch (mode) {
       case undefined:
         return (
-          <View style={styles.modalView}>
+          <View style={[styles.modalView, props.styles]}>
+            <Pressable
+              style={{
+                width: 20,
+                height: 20,
+                position: "absolute",
+                top: "5%",
+                left: "117.5%",
+              }}
+              onPress={() => setModalVisible(false)}
+            >
+              <Image
+                source={require("../assets/icons/close-sign.svg")}
+                style={{
+                  width: 20,
+                  height: 20,
+                }}
+              />
+            </Pressable>
             <Text style={styles.modalText}>{props.title}</Text>
             {props.children}
-            <Pressable
-              style={[styles.button, styles.buttonClose]}
-              onPress={() => props.setModalVisible(!modalVisible)}
-            >
-              <Text style={styles.textStyle}>Confirm</Text>
-            </Pressable>
+            {buttonVisible && (
+              <Pressable
+                style={[styles.button, styles.buttonClose]}
+                onPress={() => props.setModalVisible(!modalVisible)}
+              >
+                <Text style={styles.textStyle}>Confirm</Text>
+              </Pressable>
+            )}
           </View>
         );
 

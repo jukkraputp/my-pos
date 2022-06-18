@@ -1,4 +1,4 @@
-import { storage } from "../apis/firebase";
+import { storage } from "../config/firebase";
 import { getDownloadURL, ref } from "firebase/storage";
 
 var urlList: any[] = []

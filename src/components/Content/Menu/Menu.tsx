@@ -2,12 +2,14 @@ import { Text, View } from "react-native";
 import React, { useEffect, useState } from "react";
 import ContentCard from "../ContentCard";
 import API from "../../../apis/API";
+import { menuList } from "interface";
 
 interface props {
   selectedContent: string;
   type: string;
   onChange: Function;
   renderComplete: Function;
+  menu: { [key: string]: { name: string; price: string; image: string } };
 }
 
 export default function Menu(props: props) {

@@ -1,5 +1,6 @@
 import { View, Text, TouchableOpacity, Image, StyleSheet } from "react-native";
 import React, { useEffect } from "react";
+import Theme from "../../constants/Theme";
 
 interface props {
   name: string;
@@ -15,7 +16,7 @@ export default function ContentCard(props: props) {
   const onChange = props.onChange === undefined ? () => {} : props.onChange;
   const disabled = props.onChange === undefined ? true : false;
 
-/*   useEffect(() => {
+  /*   useEffect(() => {
     if (props.from === "Order") {
       console.log(props);
     }
@@ -42,7 +43,18 @@ export default function ContentCard(props: props) {
           <View style={styles.buttonContainer} />
         )
       ) : (
-        <View style={styles.buttonContainer}>
+        <View
+          style={
+            props.from === "Edit"
+              ? {
+                  width: 800,
+                  flexDirection: "row",
+                  justifyContent: "space-around",
+                  alignItems: "center",
+                }
+              : { flexDirection: "column" }
+          }
+        >
           <Image
             style={styles.image}
             source={{ uri: props.image }}
@@ -50,6 +62,11 @@ export default function ContentCard(props: props) {
           />
           <Text style={styles.text}>{props.name}</Text>
           <Text style={styles.text}>{props.price + " บาท"}</Text>
+          {props.from === "Edit" && (
+            <TouchableOpacity style={styles.editButton}>
+              <Text>Edit</Text>
+            </TouchableOpacity>
+          )}
         </View>
       )}
     </View>
@@ -75,5 +92,13 @@ const styles = StyleSheet.create({
     textAlign: "center",
     width: 100,
     height: 20,
+  },
+  editButton: {
+    width: 50,
+    height: 50,
+    borderRadius: 50,
+    backgroundColor: Theme.COLORS.SUCCESS,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });

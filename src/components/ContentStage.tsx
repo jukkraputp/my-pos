@@ -5,9 +5,10 @@ import Order from "./Content/Order/Order";
 import History from "./Content/History/History";
 import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "../config/firebase";
-import { order } from "interface";
+import { order, menuList } from "interface";
 import API from "../apis/API";
-import Option from "./Option/Option";
+import Option from "./Content/Option/Option";
+import { Unsubscribe } from "firebase/firestore";
 
 interface props {
   content: string;
@@ -20,8 +21,20 @@ interface props {
 export default function ContentStage(props: props) {
   const [orders, setOrders] = useState<Array<order>>([]);
   const [history, setHistory] = useState<Array<order>>([]);
-
+  const [subscribeList, setSubscribeList] = useState<Unsubscribe[]>([]);
+  const [menuList, setMenuList] = useState<menuList>({});
   const api = new API();
+
+  const logout = (auth: string | null) => {
+    subscribeList.forEach((unSubscribe) => {
+      unSubscribe();
+    });
+    props.setAuth(auth);
+  };
+
+  const setMenu = async () => {
+    setMenuList(await api.getMenu());
+  };
 
   useEffect(() => {
     const listenOrder = onSnapshot(collection(db, "Order"), (snapShot) => {
@@ -41,6 +54,10 @@ export default function ContentStage(props: props) {
       });
       setHistory(temp);
     });
+
+    setSubscribeList([listenOrder, listenHistory]);
+
+    setMenu();
   }, []);
 
   return (
@@ -50,18 +67,21 @@ export default function ContentStage(props: props) {
         type={"Food1"}
         onChange={props.updateBasket}
         renderComplete={props.renderComplete}
+        menu={menuList[props.content]}
       />
       <Menu
         selectedContent={props.content}
         type={"Food2"}
         onChange={props.updateBasket}
         renderComplete={props.renderComplete}
+        menu={menuList[props.content]}
       />
       <Menu
         selectedContent={props.content}
         type={"FoodSet"}
         onChange={props.updateBasket}
         renderComplete={props.renderComplete}
+        menu={menuList[props.content]}
       />
       <Order
         selectedContent={props.content}
@@ -77,7 +97,8 @@ export default function ContentStage(props: props) {
       <Option
         selectedContent={props.content}
         renderComplete={props.renderComplete}
-        setAuth={props.setAuth}
+        setAuth={logout}
+        menuList={menuList}
       />
     </View>
   );

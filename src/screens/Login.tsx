@@ -8,6 +8,7 @@ import {
   Keyboard,
   TouchableOpacity,
   Alert,
+  Pressable,
 } from "react-native";
 import React, { useRef, useState } from "react";
 
@@ -55,34 +56,36 @@ export default function Login(props: props) {
     <SafeAreaView>
       <Text style={styles.logoText}>{props.name}</Text>
       <KeyboardAvoidingView style={styles.containerView} behavior="height">
-        <View style={styles.loginScreenContainer}>
-          <View style={styles.loginFormView}>
-            <TextInput
-              placeholder="Username"
-              returnKeyType="next"
-              style={styles.loginFormTextInput}
-              onChangeText={(text) => {
-                setUsername(text);
-              }}
-              onSubmitEditing={() => {
-                toPasswordInput;
-              }}
-            />
-            <TextInput
-              ref={passwordRef}
-              placeholder="Password"
-              style={styles.loginFormTextInput}
-              secureTextEntry={true}
-              onChangeText={(text) => {
-                setPassword(text);
-              }}
-              onSubmitEditing={onLogin}
-            />
-            <TouchableOpacity style={styles.loginButton} onPress={onLogin}>
-              <Text style={styles.textButton}>Login</Text>
-            </TouchableOpacity>
+        <Pressable onPress={Keyboard.dismiss}>
+          <View style={styles.loginScreenContainer}>
+            <View style={styles.loginFormView}>
+              <TextInput
+                placeholder="Username"
+                returnKeyType="next"
+                style={styles.loginFormTextInput}
+                onChangeText={(text) => {
+                  setUsername(text);
+                }}
+                onSubmitEditing={() => {
+                  toPasswordInput;
+                }}
+              />
+              <TextInput
+                ref={passwordRef}
+                placeholder="Password"
+                style={styles.loginFormTextInput}
+                secureTextEntry={true}
+                onChangeText={(text) => {
+                  setPassword(text);
+                }}
+                onSubmitEditing={onLogin}
+              />
+              <TouchableOpacity style={styles.loginButton} onPress={onLogin}>
+                <Text style={styles.textButton}>Login</Text>
+              </TouchableOpacity>
+            </View>
           </View>
-        </View>
+        </Pressable>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );

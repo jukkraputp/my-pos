@@ -9,16 +9,19 @@ import {
   StyleSheet,
   Alert,
   Dimensions,
+  Pressable,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import EditMenu from "./EditMenu";
-import MyModal from "../MyModal";
-import API from "../../apis/API";
+import MyModal from "../../MyModal";
+import API from "../../../apis/API";
+import { menuList } from "interface";
 
 interface props {
   selectedContent: string;
   renderComplete: Function;
   setAuth: Function;
+  menuList: menuList;
 }
 
 const optionList = ["edit", "logout"];
@@ -29,10 +32,11 @@ const optionImages: { [key: string]: string } = {
 
 export default function Option(props: props) {
   const [auth, setAuth] = useState("");
-  const [selectedOption, setSelectedOption] = useState(undefined);
-  const [admin, setAdmin] = useState(false);
+  const [selectedOption, setSelectedOption] = useState<string | undefined>(
+    undefined
+  );
+  const [admin, setAdmin] = useState(true);
   const [password, setPassword] = useState("");
-  const [modalVisible, setModalVisible] = useState(false);
 
   const api = new API();
 
@@ -46,43 +50,53 @@ export default function Option(props: props) {
     }
   };
 
+  const setModalVisible = (visible: boolean) => {
+    if (!visible) setSelectedOption(undefined);
+  };
+
   const optionController = () => {
     return (
       <View>
-        {admin && <EditMenu />}
+        {admin && <EditMenu menuList={props.menuList} />}
         {selectedOption === "edit" && !admin && (
           <MyModal
             mode={undefined}
-            modalVisible={modalVisible}
+            modalVisible={true}
             setModalVisible={setModalVisible}
             title={"Enter Password"}
             items={{}}
             animation={"none"}
             api={api}
+            buttonVisible={false}
+            styles={{ marginTop: "35%" }}
           >
             <KeyboardAvoidingView
               style={styles.containerView}
               behavior="height"
             >
-              <View style={styles.loginScreenContainer}>
-                <View style={styles.loginFormView}>
-                  <TextInput
-                    placeholder="Password"
-                    style={styles.loginFormTextInput}
-                    secureTextEntry={true}
-                    onChangeText={(text) => {
-                      setPassword(text);
-                    }}
-                    onSubmitEditing={checkPassword}
-                  />
-                  <TouchableOpacity
-                    style={styles.loginButton}
-                    onPress={checkPassword}
-                  >
-                    <Text style={styles.textButton}>Login</Text>
-                  </TouchableOpacity>
+              <Pressable onPress={Keyboard.dismiss}>
+                <View style={styles.loginScreenContainer}>
+                  <View style={styles.loginFormView}>
+                    <TextInput
+                      placeholder="Password"
+                      style={styles.loginFormTextInput}
+                      secureTextEntry={true}
+                      onChangeText={(text) => {
+                        setPassword(text);
+                      }}
+                      onSubmitEditing={checkPassword}
+                    />
+                    <TouchableOpacity
+                      style={styles.loginButton}
+                      onPress={checkPassword}
+                    >
+                      <Text style={{ fontSize: 24, fontWeight: "bold" }}>
+                        Login
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
                 </View>
-              </View>
+              </Pressable>
             </KeyboardAvoidingView>
           </MyModal>
         )}
@@ -94,6 +108,7 @@ export default function Option(props: props) {
     console.log(option);
     switch (option) {
       case "edit":
+        setSelectedOption("edit");
         break;
       case "logout":
         api.logout();
@@ -107,10 +122,10 @@ export default function Option(props: props) {
       var image: any;
       switch (option) {
         case "logout":
-          image = require("../../assets/icons/logout-icon.png");
+          image = require("../../../assets/icons/logout-icon.png");
           break;
         default:
-          image = require("../../assets/icons/option-icon.png");
+          image = require("../../../assets/icons/option-icon.png");
           break;
       }
       return (
@@ -166,11 +181,12 @@ export default function Option(props: props) {
           : { display: "none" },
         styles.stageContainer,
         renderOptions().length === 1
-          ? { justifyContent: "center", bottom: "5%" }
+          ? { justifyContent: "center" }
           : { justifyContent: "space-evenly" },
+        { width: "100%", height: "100%" },
       ]}
     >
-      {renderOptions()}
+      {!admin && renderOptions()}
       {optionController()}
     </View>
   );
@@ -199,8 +215,10 @@ const styles = StyleSheet.create({
   },
   loginFormView: {
     flex: 1,
+    alignItems: "center",
   },
   loginFormTextInput: {
+    width: 250,
     height: 43,
     fontSize: 14,
     borderRadius: 5,
@@ -217,7 +235,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     height: 45,
     marginTop: 10,
-    width: 350,
+    width: 250,
     alignItems: "center",
     justifyContent: "center",
     zIndex: 25,
