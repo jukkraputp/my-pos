@@ -8,7 +8,7 @@ import Reception from "./src/screens/Reception";
 import Chef from "./src/screens/Chef";
 import Login from "./src/screens/Login";
 import API from "./src/apis/API";
-import { LogBox } from "react-native";
+import { LogBox, Platform } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 LogBox.ignoreLogs([
@@ -19,13 +19,17 @@ LogBox.ignoreLogs([
 ]);
 
 async function changeScreenOrientation() {
-  await ScreenOrientation.lockAsync(
-    ScreenOrientation.OrientationLock.LANDSCAPE_RIGHT
-  );
+  try {
+    await ScreenOrientation.lockAsync(
+      ScreenOrientation.OrientationLock.LANDSCAPE_RIGHT
+    );
+  } catch (err) {
+    console.log(err);
+  }
 }
 
 export default function App() {
-  const [auth, setAuth] = useState<string | null>(null);
+  const [auth, setAuth] = useState<string | null>("waiter" /* null */);
 
   const api = new API();
 

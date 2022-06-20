@@ -20,7 +20,7 @@ import { menuList } from "interface";
 interface props {
   selectedContent: string;
   renderComplete: Function;
-  setAuth: Function;
+  logout: Function;
   menuList: menuList;
 }
 
@@ -31,19 +31,26 @@ const optionImages: { [key: string]: string } = {
 };
 
 export default function Option(props: props) {
-  const [auth, setAuth] = useState("");
   const [selectedOption, setSelectedOption] = useState<string | undefined>(
     undefined
   );
-  const [admin, setAdmin] = useState(true);
-  const [password, setPassword] = useState("");
+  const [admin, setAdmin] = useState<boolean>(false);
+  const [password, setPassword] = useState<string>("");
 
   const api = new API();
 
   const perRow = 2;
 
+  useEffect(() => {
+    if (props.selectedContent !== " Option" && admin) setAdmin(false);
+  }, [props.selectedContent]);
+
+  useEffect(() => {
+    if (!admin) setSelectedOption("");
+  }, [admin]);
+
   const checkPassword = () => {
-    if (password === "228115") {
+    if (password === "") {
       setAdmin(true);
     } else {
       Alert.alert("Wrong password");
@@ -58,48 +65,50 @@ export default function Option(props: props) {
     return (
       <View>
         {admin && <EditMenu menuList={props.menuList} />}
-        {selectedOption === "edit" && !admin && (
-          <MyModal
-            mode={undefined}
-            modalVisible={true}
-            setModalVisible={setModalVisible}
-            title={"Enter Password"}
-            items={{}}
-            animation={"none"}
-            api={api}
-            buttonVisible={false}
-            styles={{ marginTop: "35%" }}
-          >
-            <KeyboardAvoidingView
-              style={styles.containerView}
-              behavior="height"
+        {selectedOption === "edit" &&
+          !admin &&
+          props.selectedContent === "Option" && (
+            <MyModal
+              mode={undefined}
+              modalVisible={true}
+              setModalVisible={setModalVisible}
+              title={"Enter Password"}
+              items={{}}
+              animation={"none"}
+              api={api}
+              buttonVisible={false}
+              styles={{ marginTop: "35%" }}
             >
-              <Pressable onPress={Keyboard.dismiss}>
-                <View style={styles.loginScreenContainer}>
-                  <View style={styles.loginFormView}>
-                    <TextInput
-                      placeholder="Password"
-                      style={styles.loginFormTextInput}
-                      secureTextEntry={true}
-                      onChangeText={(text) => {
-                        setPassword(text);
-                      }}
-                      onSubmitEditing={checkPassword}
-                    />
-                    <TouchableOpacity
-                      style={styles.loginButton}
-                      onPress={checkPassword}
-                    >
-                      <Text style={{ fontSize: 24, fontWeight: "bold" }}>
-                        Login
-                      </Text>
-                    </TouchableOpacity>
+              <KeyboardAvoidingView
+                style={styles.containerView}
+                behavior="height"
+              >
+                <Pressable onPress={Keyboard.dismiss}>
+                  <View style={styles.loginScreenContainer}>
+                    <View style={styles.loginFormView}>
+                      <TextInput
+                        placeholder="Password"
+                        style={styles.loginFormTextInput}
+                        secureTextEntry={true}
+                        onChangeText={(text) => {
+                          setPassword(text);
+                        }}
+                        onSubmitEditing={checkPassword}
+                      />
+                      <TouchableOpacity
+                        style={styles.loginButton}
+                        onPress={checkPassword}
+                      >
+                        <Text style={{ fontSize: 24, fontWeight: "bold" }}>
+                          Login
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
                   </View>
-                </View>
-              </Pressable>
-            </KeyboardAvoidingView>
-          </MyModal>
-        )}
+                </Pressable>
+              </KeyboardAvoidingView>
+            </MyModal>
+          )}
       </View>
     );
   };
@@ -112,7 +121,7 @@ export default function Option(props: props) {
         break;
       case "logout":
         api.logout();
-        props.setAuth(null);
+        props.logout();
         break;
     }
   };

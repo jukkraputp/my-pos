@@ -4,6 +4,7 @@ import {
   StatusBar,
   StyleSheet,
   Dimensions,
+  Platform,
 } from "react-native";
 import React from "react";
 import API from "../apis/API";
@@ -141,22 +142,24 @@ export default class Reception extends React.Component<props, state> {
               paddingTop: StatusBar.currentHeight,
             }}
           >
-            <LottieView
-              source={require("../assets/animation/colors-circle-loader.json")}
-              style={[
-                {
-                  width: 450,
-                  height: 450,
-                  alignSelf: "center",
-                  justifyContent: "center",
-                  marginTop: 20,
-                },
-                this.state.renderFinish
-                  ? { display: "none" }
-                  : { display: "flex" },
-              ]}
-              autoPlay
-            />
+            {Platform.OS !== "web" ? (
+              <LottieView
+                source={require("../assets/animation/colors-circle-loader.json")}
+                style={[
+                  {
+                    width: 450,
+                    height: 450,
+                    alignSelf: "center",
+                    justifyContent: "center",
+                    marginTop: 20,
+                  },
+                  this.state.renderFinish
+                    ? { display: "none" }
+                    : { display: "flex" },
+                ]}
+                autoPlay
+              />
+            ) : null}
             <ScrollView
               style={[
                 styles.scrollView,

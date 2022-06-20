@@ -21,15 +21,11 @@ interface props {
 export default function ContentStage(props: props) {
   const [orders, setOrders] = useState<Array<order>>([]);
   const [history, setHistory] = useState<Array<order>>([]);
-  const [subscribeList, setSubscribeList] = useState<Unsubscribe[]>([]);
   const [menuList, setMenuList] = useState<menuList>({});
   const api = new API();
 
-  const logout = (auth: string | null) => {
-    subscribeList.forEach((unSubscribe) => {
-      unSubscribe();
-    });
-    props.setAuth(auth);
+  const logout = () => {
+    props.setAuth(null);
   };
 
   const setMenu = async () => {
@@ -55,10 +51,17 @@ export default function ContentStage(props: props) {
       setHistory(temp);
     });
 
-    setSubscribeList([listenOrder, listenHistory]);
-
     setMenu();
+
+    return () => {
+      listenOrder();
+      listenHistory();
+    };
   }, []);
+
+  useEffect(() => {
+    console.log(menuList);
+  }, [menuList]);
 
   return (
     <View>
@@ -97,7 +100,7 @@ export default function ContentStage(props: props) {
       <Option
         selectedContent={props.content}
         renderComplete={props.renderComplete}
-        setAuth={logout}
+        logout={logout}
         menuList={menuList}
       />
     </View>

@@ -1,11 +1,4 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  Modal,
-  Pressable,
-  Image,
-} from "react-native";
+import { View, Text, StyleSheet, Modal, Pressable, Image } from "react-native";
 import React from "react";
 import BasketContent from "./Basket/BasketContent";
 import API from "../apis/API";
@@ -47,7 +40,7 @@ export default function MyModal(props: props) {
                 height: 20,
                 position: "absolute",
                 top: "5%",
-                left: "117.5%",
+                left: 270,
               }}
               onPress={() => setModalVisible(false)}
             >

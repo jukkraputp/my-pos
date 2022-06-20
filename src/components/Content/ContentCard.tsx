@@ -63,7 +63,10 @@ export default function ContentCard(props: props) {
           <Text style={styles.text}>{props.name}</Text>
           <Text style={styles.text}>{props.price + " บาท"}</Text>
           {props.from === "Edit" && (
-            <TouchableOpacity style={styles.editButton}>
+            <TouchableOpacity
+              style={styles.editButton}
+              onPress={() => props.onChange(props.type + "_" + props.ID)}
+            >
               <Text>Edit</Text>
             </TouchableOpacity>
           )}
