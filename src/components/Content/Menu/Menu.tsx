@@ -19,6 +19,10 @@ export default function Menu(props: props) {
 
   const api = new API();
 
+  useEffect(() => {
+    console.log(props.menu);
+  });
+
   const sortObj = (obj: { [key: string]: any }) => {
     const sorted = Object.keys(obj)
       .sort()
@@ -50,8 +54,8 @@ export default function Menu(props: props) {
     var row: any = [];
 
     for (let idx = 0; idx < 4 && itemID + idx < maxID; idx++) {
-      const name = await api.getName(props.type + "_" + String(itemID + idx));
-      const price = await api.getPrice(props.type + "_" + String(itemID + idx));
+      const name = props.menu[String(itemID + idx)].name;
+      const price = Number(props.menu[String(itemID + idx)].price);
       const image = await api.getImage(
         props.type + "_" + props.type + "-" + String(itemID + idx)
       );

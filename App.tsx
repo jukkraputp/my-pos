@@ -10,12 +10,15 @@ import Login from "./src/screens/Login";
 import API from "./src/apis/API";
 import { LogBox, Platform } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { ref, uploadBytes } from "firebase/storage";
+import { storage } from "./src/config/firebase";
 
 LogBox.ignoreLogs([
   "ViewPropTypes will be removed",
   "ColorPropType will be removed",
   "(0 , _idb.openDB)",
   "Remote debugger",
+  "Please report: Excessive number of pending callbacks",
 ]);
 
 async function changeScreenOrientation() {
@@ -40,10 +43,11 @@ export default function App() {
 
   useEffect(() => {
     changeScreenOrientation();
-    /* AsyncStorage.clear().then(() => {
+    AsyncStorage.clear().then(() => {
       api.saveData();
-    }); */
-    api.saveData();
+    });
+    /* api.saveData(); */
+
     /* AsyncStorage.getAllKeys().then((keys) => {
       keys.forEach(async (key) => {
         if (key.includes("name") || key.includes("price")) {
@@ -51,6 +55,18 @@ export default function App() {
         }
       });
     }); */
+
+    /* const storageRef = ref(storage, "Food1/Food1-30.jpg");
+    uploadBytes(
+      storageRef,
+      require("./src/assets/images/Sign/question_mark-sign.png"),
+      {
+        contentType: "image/jpeg",
+      }
+    ).then(() => {
+      console.log("file uploaded!");
+    }); */
+
     const inititalAuth = async () => {
       if (auth === null) setAuth(await AsyncStorage.getItem("Auth"));
     };

@@ -15,6 +15,10 @@ interface props {
 export default function ContentCard(props: props) {
   const onChange = props.onChange === undefined ? () => {} : props.onChange;
   const disabled = props.onChange === undefined ? true : false;
+  const image =
+    props.image !== "null" && props.image !== ""
+      ? props.image
+      : "https://firebasestorage.googleapis.com/v0/b/mypos-3f997.appspot.com/o/Sign%2Fquestion_mark-sign.svg?alt=media&token=275bf15a-a310-46a6-a56c-630c8d0eb180";
 
   /*   useEffect(() => {
     if (props.from === "Order") {
@@ -25,23 +29,19 @@ export default function ContentCard(props: props) {
   return (
     <View style={styles.cardContainer}>
       {props.from === "Menu" ? (
-        !!props.image ? (
-          <TouchableOpacity
-            style={styles.buttonContainer}
-            onPress={() => onChange(props.type + "_" + String(props.ID), "+")}
-            disabled={disabled}
-          >
-            <Image
-              style={styles.image}
-              source={{ uri: props.image }}
-              resizeMethod="resize"
-            />
-            <Text style={styles.text}>{props.name}</Text>
-            <Text style={styles.text}>{props.price} บาท</Text>
-          </TouchableOpacity>
-        ) : (
-          <View style={styles.buttonContainer} />
-        )
+        <TouchableOpacity
+          style={styles.buttonContainer}
+          onPress={() => onChange(props.type + "_" + String(props.ID), "+")}
+          disabled={disabled}
+        >
+          <Image
+            style={styles.image}
+            source={{ uri: image }}
+            resizeMethod="resize"
+          />
+          <Text style={styles.text}>{props.name}</Text>
+          <Text style={styles.text}>{props.price} บาท</Text>
+        </TouchableOpacity>
       ) : (
         <View
           style={
@@ -57,7 +57,7 @@ export default function ContentCard(props: props) {
         >
           <Image
             style={styles.image}
-            source={{ uri: props.image }}
+            source={{ uri: image }}
             resizeMethod="resize"
           />
           <Text style={styles.text}>{props.name}</Text>

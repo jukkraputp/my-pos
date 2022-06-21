@@ -8,116 +8,94 @@ import {
   StyleSheet,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import API from "../../apis/API";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { menuList } from "interface";
 interface props {
   updateBasket: Function;
   items: { [key: string]: any };
   inBasket: boolean;
-  api: API;
+  menuList: menuList;
 }
 
 export default function BasketContent(props: props) {
-  const [allImages, setAllImages] = useState<{ [key: string]: string }>({});
-  const api = props.api;
-  const items = props.items;
-
-  const getData = async () => {
-    const keys = await AsyncStorage.getAllKeys();
-    const getURL = keys.map(async (key) => {
-      const url = String(await AsyncStorage.getItem(key));
-      return `${key}::${url}`;
-    });
-    return Promise.all(getURL);
-  };
-
-  useEffect(() => {
-    getData().then((urls) => {
-      var images: { [key: string]: string } = {};
-      urls.map((url) => {
-        const key = String(url.split("::").at(0));
-        const uri = url.split("::").at(1);
-        images[key] = String(uri);
-      });
-      setAllImages(images);
-    });
-  }, []);
-
   const renderBasket = () => {
-    var jsx: JSX.Element[][] = [];
-    if (Object.keys(items).length !== 0) {
-      Object.keys(items).forEach((itemName: string) => {
-        const itemAmount = items[itemName];
-        const index1 = itemName.split("_")[0];
-        const index2 = itemName.split("_")[1];
-        const key = index1 + "_" + index1 + "-" + index2;
-        const image = allImages[key];
-        jsx.push([
-          <View
-            key={itemName}
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              marginTop: 10,
-              marginLeft: 10,
-              marginRight: 25,
-            }}
-          >
-            <View style={{ width: "95%" }}>
-              <Text style={styles.itemNameText}>{api.getName(itemName)}</Text>
+    const JSX = Object.keys(props.items).map((itemName: string) => {
+      const itemAmount = props.items[itemName];
+      const index1 = itemName.split("_")[0];
+      const index2 = itemName.split("_")[1];
+      const image = props.menuList[index1][index2].image;
+      const name = props.menuList[index1][index2].name;
+      return (
+        <View
+          key={itemName}
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            marginTop: 10,
+            marginLeft: 10,
+            marginRight: 25,
+          }}
+        >
+          <View style={{ width: "95%" }}>
+            <Text style={styles.itemNameText}>{name}</Text>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+              }}
+            >
+              <Image
+                style={styles.bigImage}
+                source={{ uri: image }}
+                resizeMethod="resize"
+              />
               <View
                 style={{
                   flexDirection: "row",
-                  justifyContent: "space-between",
+                  alignItems: "center",
+                  right: "15%",
                 }}
               >
-                <Image style={styles.bigImage} source={{ uri: image }} />
-                <View
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    right: "15%",
-                  }}
-                >
-                  {props.inBasket && (
-                    <TouchableOpacity
-                      style={(styles.button, { right: "25%" })}
-                      onPress={() => props.updateBasket(itemName, "+")}
-                    >
-                      <Image
-                        style={styles.smallImage}
-                        source={{ uri: allImages["Sign_plus-sign"] }}
-                      />
-                    </TouchableOpacity>
-                  )}
-                  <Text
-                    style={[
-                      styles.itemAmountText,
-                      !props.inBasket && { left: "20%" },
-                    ]}
+                {props.inBasket && (
+                  <TouchableOpacity
+                    style={(styles.button, { right: "25%" })}
+                    onPress={() => props.updateBasket(itemName, "+")}
                   >
-                    {!props.inBasket && " x  "}
-                    {itemAmount}
-                  </Text>
-                  {props.inBasket && (
-                    <TouchableOpacity
-                      style={(styles.button, { left: "25%" })}
-                      onPress={() => props.updateBasket(itemName, "-")}
-                    >
-                      <Image
-                        style={styles.smallImage}
-                        source={{ uri: allImages["Sign_minus-sign"] }}
-                      />
-                    </TouchableOpacity>
-                  )}
-                </View>
+                    <Image
+                      style={styles.smallImage}
+                      source={require("../../assets/images/Sign/plus-sign.svg")}
+                      resizeMethod="resize"
+                    />
+                  </TouchableOpacity>
+                )}
+                <Text
+                  style={[
+                    styles.itemAmountText,
+                    !props.inBasket && { left: "20%" },
+                  ]}
+                >
+                  {!props.inBasket && " x  "}
+                  {itemAmount}
+                </Text>
+                {props.inBasket && (
+                  <TouchableOpacity
+                    style={(styles.button, { left: "25%" })}
+                    onPress={() => props.updateBasket(itemName, "-")}
+                  >
+                    <Image
+                      style={styles.smallImage}
+                      source={require("../../assets/images/Sign/minus-sign.svg")}
+                      resizeMethod="resize"
+                    />
+                  </TouchableOpacity>
+                )}
               </View>
             </View>
-          </View>,
-        ]);
-      });
-    }
-    return jsx;
+          </View>
+        </View>
+      );
+    });
+    return JSX;
   };
 
   return (

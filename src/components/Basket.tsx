@@ -2,16 +2,18 @@ import { View, Text, Dimensions, TouchableOpacity, Image } from "react-native";
 import React, { useEffect, useState } from "react";
 import BasketContent from "./Basket/BasketContent";
 import API from "../apis/API";
+import { menuList } from "interface";
 
 interface props {
   basket: {};
   updateBasket: Function;
   clearBasket: Function;
   confirmOrder: Function;
+  menuList: menuList;
 }
 
 export default function Basket(props: props) {
-  const [items, setItems] = useState({});
+  const [items, setItems] = useState<{}>({});
 
   const api = new API();
 
@@ -22,7 +24,6 @@ export default function Basket(props: props) {
   }, [props.basket]);
 
   const confirmOrder = () => {
-    console.log(items);
     if (Object.keys(items).length !== 0) {
       props.confirmOrder();
     }
@@ -76,7 +77,7 @@ export default function Basket(props: props) {
         updateBasket={props.updateBasket}
         items={items}
         inBasket={true}
-        api={api}
+        menuList={props.menuList}
       />
       {Object.keys(items).length > 0 && (
         <>
@@ -91,7 +92,7 @@ export default function Basket(props: props) {
           >
             <Text style={{ fontSize: 20, marginLeft: 5 }}>ราคารวม</Text>
             <Text style={{ fontSize: 20, marginRight: 5 }}>
-              {api.getTotalAmount(items).toLocaleString()} บาท
+              {api.getTotalAmount(items, props.menuList).toLocaleString()} บาท
             </Text>
           </View>
           <View style={{ height: maxHeight * 0.1 }}>

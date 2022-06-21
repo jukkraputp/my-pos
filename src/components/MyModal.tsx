@@ -2,6 +2,7 @@ import { View, Text, StyleSheet, Modal, Pressable, Image } from "react-native";
 import React from "react";
 import BasketContent from "./Basket/BasketContent";
 import API from "../apis/API";
+import { menuList } from "interface";
 
 interface props {
   mode: any;
@@ -11,13 +12,13 @@ interface props {
   items: { [key: string]: any };
   animation: any;
   children?: React.ReactNode | React.ReactNode[];
-  api: API;
   buttonVisible?: boolean;
   styles?: {};
+  menuList: menuList;
 }
 
 export default function MyModal(props: props) {
-  const api = props.api;
+  const api = new API();
   const modalVisible = props.modalVisible;
   const mode = props.mode;
 
@@ -25,7 +26,6 @@ export default function MyModal(props: props) {
     props.buttonVisible !== undefined ? props.buttonVisible : true;
 
   const setModalVisible = (visible: boolean, isConfirm = false) => {
-    console.log("check");
     props.setModalVisible(visible, isConfirm);
   };
 
@@ -40,7 +40,7 @@ export default function MyModal(props: props) {
                 height: 20,
                 position: "absolute",
                 top: "5%",
-                left: 270,
+                left: "110%",
               }}
               onPress={() => setModalVisible(false)}
             >
@@ -92,10 +92,10 @@ export default function MyModal(props: props) {
               updateBasket={() => {}}
               items={props.items}
               inBasket={false}
-              api={api}
+              menuList={props.menuList}
             />
             <Text style={{ fontSize: 16, fontWeight: "bold" }}>
-              {api.getTotalAmount(props.items)} บาท
+              {api.getTotalAmount(props.items, props.menuList)} บาท
             </Text>
             <Pressable
               style={[styles.button, styles.buttonClose]}
@@ -131,6 +131,7 @@ const styles = StyleSheet.create({
     marginVertical: "5%",
   },
   modalView: {
+    maxWidth: 500,
     width: 300,
     /* margin: 20, */
     backgroundColor: "white",

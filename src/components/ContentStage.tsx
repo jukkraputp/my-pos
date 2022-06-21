@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import Menu from "./Content/Menu/Menu";
 import Order from "./Content/Order/Order";
 import History from "./Content/History/History";
-import { collection, onSnapshot } from "firebase/firestore";
+import { collection, onSnapshot, updateDoc } from "firebase/firestore";
 import { db } from "../config/firebase";
 import { order, menuList } from "interface";
 import API from "../apis/API";
@@ -16,20 +16,19 @@ interface props {
   toggleOrder: Function;
   renderComplete: Function;
   setAuth: Function;
+  menuList: menuList;
+  setMenuList: Function;
+  setEdit: Function;
 }
 
 export default function ContentStage(props: props) {
   const [orders, setOrders] = useState<Array<order>>([]);
   const [history, setHistory] = useState<Array<order>>([]);
-  const [menuList, setMenuList] = useState<menuList>({});
+  const [isEditiing, setIsEditting] = useState(false);
   const api = new API();
 
   const logout = () => {
     props.setAuth(null);
-  };
-
-  const setMenu = async () => {
-    setMenuList(await api.getMenu());
   };
 
   useEffect(() => {
@@ -51,8 +50,6 @@ export default function ContentStage(props: props) {
       setHistory(temp);
     });
 
-    setMenu();
-
     return () => {
       listenOrder();
       listenHistory();
@@ -60,8 +57,19 @@ export default function ContentStage(props: props) {
   }, []);
 
   useEffect(() => {
-    console.log(menuList);
-  }, [menuList]);
+    if (props.content !== "Option" && isEditiing) props.setMenuList();
+  }, [props.content]);
+
+  useEffect(() => {
+    if (isEditiing) {
+      props.setEdit();
+      setIsEditting(false);
+    }
+  }, [isEditiing]);
+
+  useEffect(() => {
+    console.log(props.menuList);
+  }, [props.menuList]);
 
   return (
     <View>
@@ -70,21 +78,21 @@ export default function ContentStage(props: props) {
         type={"Food1"}
         onChange={props.updateBasket}
         renderComplete={props.renderComplete}
-        menu={menuList[props.content]}
+        menu={props.menuList[props.content]}
       />
       <Menu
         selectedContent={props.content}
         type={"Food2"}
         onChange={props.updateBasket}
         renderComplete={props.renderComplete}
-        menu={menuList[props.content]}
+        menu={props.menuList[props.content]}
       />
       <Menu
         selectedContent={props.content}
         type={"FoodSet"}
         onChange={props.updateBasket}
         renderComplete={props.renderComplete}
-        menu={menuList[props.content]}
+        menu={props.menuList[props.content]}
       />
       <Order
         selectedContent={props.content}
@@ -97,12 +105,15 @@ export default function ContentStage(props: props) {
         history={history}
         renderComplete={props.renderComplete}
       />
-      <Option
-        selectedContent={props.content}
-        renderComplete={props.renderComplete}
-        logout={logout}
-        menuList={menuList}
-      />
+      {Object.keys(props.menuList).length > 0 && (
+        <Option
+          selectedContent={props.content}
+          renderComplete={props.renderComplete}
+          logout={logout}
+          menuList={props.menuList}
+          setIsEditting={setIsEditting}
+        />
+      )}
     </View>
   );
 }

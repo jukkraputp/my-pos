@@ -8,9 +8,17 @@ import { saveData } from "./saveAsyncStorage";
 import addNewMenu from "./addNewMenu";
 import getImage from "./getImages";
 import getMenu from "./getMenu";
+import editMenu from "./editMenu";
+import { storage } from "../config/firebase";
+import { ref, uploadBytes } from "firebase/storage";
+import { menuList } from "interface";
 
 export default class API {
   constructor() {}
+
+  editMenu = (menuID: string, menu: { name: string; price: string }) => {
+    return editMenu(menuID, menu);
+  };
 
   getMenu = async () => {
     return await getMenu();
@@ -43,6 +51,10 @@ export default class API {
     });
   };
 
+  private addNewTempImage = async (type: string, id: string) => {
+    const storageRef = ref(storage, type);
+  };
+
   addNewMenu = async (type: string, name: string, price: number) => {
     console.log("add new menu", type, name, price);
     const lastID = await this.getLastID(type);
@@ -54,10 +66,11 @@ export default class API {
         console.log(err);
         return false;
       });
+    this.addNewTempImage(type, lastID);
   };
 
-  saveData = () => {
-    saveData();
+  saveData = async () => {
+    return await saveData();
   };
 
   getImage = async (key: string) => {
@@ -87,16 +100,17 @@ export default class API {
     return String(res);
   };
 
-  getPrice = async (item: string) => {
+  private getPrice = async (item: string) => {
     const res = await getPrice(item);
     return Number(res);
   };
 
-  getTotalAmount = (order: { [key: string]: any }) => {
+  getTotalAmount = (order: { [key: string]: any }, menuList: menuList) => {
     var totalAmount = 0;
-    Object.keys(order).forEach(async (item) => {
-      const price = await this.getPrice(item);
-      totalAmount += price * order[item];
+    Object.keys(order).forEach((menu) => {
+      const index1 = String(menu.split("_").at(0));
+      const index2 = String(menu.split("_").at(1));
+      totalAmount += Number(menuList[index1][index2].price) * order[menu];
     });
     return totalAmount;
   };

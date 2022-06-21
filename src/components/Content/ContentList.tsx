@@ -17,14 +17,10 @@ interface props {
   type: string;
   editMenu: Function;
   perRow?: number;
-  addNewMenu: Function;
   children?: React.ReactNode;
 }
 
 export default function ContentList(props: props) {
-  const addNewMenu = () => {
-    props.addNewMenu();
-  };
 
   const renderList = () => {
     return (

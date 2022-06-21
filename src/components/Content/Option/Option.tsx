@@ -22,6 +22,7 @@ interface props {
   renderComplete: Function;
   logout: Function;
   menuList: menuList;
+  setIsEditting: Function;
 }
 
 const optionList = ["edit", "logout"];
@@ -34,7 +35,7 @@ export default function Option(props: props) {
   const [selectedOption, setSelectedOption] = useState<string | undefined>(
     undefined
   );
-  const [admin, setAdmin] = useState<boolean>(false);
+  const [admin, setAdmin] = useState<boolean>(true);
   const [password, setPassword] = useState<string>("");
 
   const api = new API();
@@ -42,8 +43,12 @@ export default function Option(props: props) {
   const perRow = 2;
 
   useEffect(() => {
+    props.renderComplete();
+  }, []);
+
+  /* useEffect(() => {
     if (props.selectedContent !== " Option" && admin) setAdmin(false);
-  }, [props.selectedContent]);
+  }, [props.selectedContent]); */
 
   useEffect(() => {
     if (!admin) setSelectedOption("");
@@ -62,12 +67,16 @@ export default function Option(props: props) {
   };
 
   const optionController = () => {
-    return (
-      <View>
-        {admin && <EditMenu menuList={props.menuList} />}
-        {selectedOption === "edit" &&
-          !admin &&
-          props.selectedContent === "Option" && (
+    if (props.selectedContent === "Option")
+      return (
+        <View>
+          {admin && (
+            <EditMenu
+              menuList={props.menuList}
+              setIsEditting={props.setIsEditting}
+            />
+          )}
+          {selectedOption === "edit" && !admin && (
             <MyModal
               mode={undefined}
               modalVisible={true}
@@ -75,9 +84,9 @@ export default function Option(props: props) {
               title={"Enter Password"}
               items={{}}
               animation={"none"}
-              api={api}
               buttonVisible={false}
               styles={{ marginTop: "35%" }}
+              menuList={props.menuList}
             >
               <KeyboardAvoidingView
                 style={styles.containerView}
@@ -109,12 +118,11 @@ export default function Option(props: props) {
               </KeyboardAvoidingView>
             </MyModal>
           )}
-      </View>
-    );
+        </View>
+      );
   };
 
   const optionSelect = (option: string) => {
-    console.log(option);
     switch (option) {
       case "edit":
         setSelectedOption("edit");
@@ -152,10 +160,6 @@ export default function Option(props: props) {
       );
     });
   };
-
-  useEffect(() => {
-    props.renderComplete();
-  }, []);
 
   const renderOptions = () => {
     var jsx: JSX.Element[] = [];

@@ -15,6 +15,7 @@ import MyModal from "../components/MyModal";
 import { db } from "../config/firebase";
 import { addDoc, collection } from "firebase/firestore";
 import LottieView from "lottie-react-native";
+import { menuList } from "interface";
 
 interface props {
   setAuth: Function;
@@ -25,6 +26,7 @@ interface state {
   basket: {};
   confirmingOrder: boolean;
   renderFinish: boolean;
+  menuList: menuList;
 }
 
 export default class Reception extends React.Component<props, state> {
@@ -36,10 +38,11 @@ export default class Reception extends React.Component<props, state> {
   constructor(props: props) {
     super(props);
     this.state = {
-      content: "Option",
+      content: "Food1",
       basket: {},
       confirmingOrder: false,
       renderFinish: false,
+      menuList: {},
     };
     this.navbarList = [
       "Food1",
@@ -55,7 +58,18 @@ export default class Reception extends React.Component<props, state> {
       this.state.content !== "History" &&
       this.state.content !== "Option";
     this.API = new API();
+
+    this.setMenu();
   }
+
+  setMenu = async () => {
+    const menu = await this.API.getMenu();
+    this.setState({ menuList: menu });
+  };
+
+  setEdit = () => {
+    this.API.saveData().then(() => this.setMenu());
+  };
 
   renderComplete = (point: number = 1) => {
     this.renderCompleted += point;
@@ -104,7 +118,7 @@ export default class Reception extends React.Component<props, state> {
   setModalVisible = async (visible: boolean, isConfirm = false) => {
     if (isConfirm) {
       const order = this.state.basket;
-      const totalAmount = this.API.getTotalAmount(order);
+      const totalAmount = this.API.getTotalAmount(order, this.state.menuList);
       console.log(order, totalAmount);
       await addDoc(collection(db, "Order"), {
         foods: order,
@@ -177,6 +191,9 @@ export default class Reception extends React.Component<props, state> {
                 toggleOrder={this.toggleOrder}
                 renderComplete={this.renderComplete}
                 setAuth={this.props.setAuth}
+                menuList={this.state.menuList}
+                setMenuList={this.setMenu}
+                setEdit={this.setEdit}
               />
             </ScrollView>
           </View>
@@ -190,6 +207,7 @@ export default class Reception extends React.Component<props, state> {
                 updateBasket={this.updateBasket}
                 confirmOrder={this.confirmOrder}
                 clearBasket={this.clearBasket}
+                menuList={this.state.menuList}
               />
             </View>
           )}
@@ -211,7 +229,7 @@ export default class Reception extends React.Component<props, state> {
               items={this.state.basket}
               mode={"confirm order"}
               title={""}
-              api={this.API}
+              menuList={this.state.menuList}
             />
           </View>
         )}
