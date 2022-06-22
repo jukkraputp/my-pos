@@ -35,7 +35,7 @@ export default function Option(props: props) {
   const [selectedOption, setSelectedOption] = useState<string | undefined>(
     undefined
   );
-  const [admin, setAdmin] = useState<boolean>(true);
+  const [admin, setAdmin] = useState<boolean>(false);
   const [password, setPassword] = useState<string>("");
 
   const api = new API();
@@ -46,9 +46,9 @@ export default function Option(props: props) {
     props.renderComplete();
   }, []);
 
-  /* useEffect(() => {
+  useEffect(() => {
     if (props.selectedContent !== " Option" && admin) setAdmin(false);
-  }, [props.selectedContent]); */
+  }, [props.selectedContent]);
 
   useEffect(() => {
     if (!admin) setSelectedOption("");
@@ -196,7 +196,8 @@ export default function Option(props: props) {
         renderOptions().length === 1
           ? { justifyContent: "center" }
           : { justifyContent: "space-evenly" },
-        { width: "100%", height: "100%" },
+        { width: "100%", height: Dimensions.get("screen").height },
+        { backgroundColor: "black" },
       ]}
     >
       {!admin && renderOptions()}

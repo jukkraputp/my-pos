@@ -78,21 +78,21 @@ export default function ContentStage(props: props) {
         type={"Food1"}
         onChange={props.updateBasket}
         renderComplete={props.renderComplete}
-        menu={props.menuList[props.content]}
+        menu={props.menuList["Food1"]}
       />
       <Menu
         selectedContent={props.content}
         type={"Food2"}
         onChange={props.updateBasket}
         renderComplete={props.renderComplete}
-        menu={props.menuList[props.content]}
+        menu={props.menuList["Food2"]}
       />
       <Menu
         selectedContent={props.content}
         type={"FoodSet"}
         onChange={props.updateBasket}
         renderComplete={props.renderComplete}
-        menu={props.menuList[props.content]}
+        menu={props.menuList["FoodSet"]}
       />
       <Order
         selectedContent={props.content}

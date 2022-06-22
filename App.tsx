@@ -23,9 +23,13 @@ LogBox.ignoreLogs([
 
 async function changeScreenOrientation() {
   try {
-    await ScreenOrientation.lockAsync(
-      ScreenOrientation.OrientationLock.LANDSCAPE_RIGHT
-    );
+    Platform.OS === "android"
+      ? await ScreenOrientation.lockAsync(
+          ScreenOrientation.OrientationLock.LANDSCAPE_RIGHT
+        )
+      : await ScreenOrientation.lockAsync(
+          ScreenOrientation.OrientationLock.PORTRAIT_UP
+        );
   } catch (err) {
     console.log(err);
   }
