@@ -153,7 +153,7 @@ export default function EditMenu(props: props) {
                 >
                   {NavbarName[section]}
                 </Text>
-                {/* <TouchableOpacity
+                <TouchableOpacity
                   style={styles.editButton}
                   onPress={() => {
                     setState("addNewMenu");
@@ -162,9 +162,10 @@ export default function EditMenu(props: props) {
                 >
                   <Image
                     style={styles.imageAddButton}
-                    source={require("../../../assets/images/Sign/plus-sign.png")} resizeMethod="resize"
+                    source={require("../../../assets/images/Sign/plus-sign.svg")}
+                    resizeMethod="resize"
                   />
-                </TouchableOpacity> */}
+                </TouchableOpacity>
               </View>
             </ContentList>
           );
@@ -279,10 +280,10 @@ const styles = StyleSheet.create({
     alignSelf: "center",
   },
   editButton: {
-    width: 50,
-    height: 50,
-    /* borderRadius: 50, */
-    /* backgroundColor: Theme.COLORS.SUCCESS, */
+    width: 55,
+    height: 55,
+    borderRadius: 55,
+    backgroundColor: Theme.COLORS.WHITE,
     justifyContent: "center",
     alignItems: "center",
   },

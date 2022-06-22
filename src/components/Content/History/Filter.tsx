@@ -1,9 +1,16 @@
 import { View, Text, Dimensions, StyleSheet } from "react-native";
 import React, { useState } from "react";
 
-export default function Filter() {
-  const [startDate, setStartDate] = useState(new Date(Date.now()));
-  const [endDate, setEndDate] = useState(new Date(Date.now()));
+interface props {
+  startDate: Date;
+  setStartDate: Function;
+  endDate: Date;
+  setEndDate: Function;
+}
+
+export default function Filter(props: props) {
+  const startDate = props.startDate;
+  const endDate = props.endDate;
 
   return (
     <View style={styles.container}>
@@ -13,7 +20,9 @@ export default function Filter() {
         </Text>
       </View>
       <View style={styles.filterContainer}>
-        <Text style={styles.filterFont}>End date: {endDate.toDateString()}</Text>
+        <Text style={styles.filterFont}>
+          End date: {endDate.toDateString()}
+        </Text>
       </View>
     </View>
   );
@@ -21,16 +30,21 @@ export default function Filter() {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "black",
-    height: Dimensions.get("window").height * 0.1,
+    width: "50%",
+    height: Dimensions.get("window").height * 0.05,
+    position: "absolute",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "flex-start",
+    zIndex: 20,
   },
   filterContainer: {
-    width: 200,
-    height: 25,
-    backgroundColor: "white",
-    marginTop: 5,
+    width: "80%",
+    height: Dimensions.get("window").height * 0.05,
+    backgroundColor: "black",
   },
   filterFont: {
-    color: "black",
+    color: "white",
+    marginLeft: 10,
   },
 });

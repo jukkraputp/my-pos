@@ -1,14 +1,12 @@
-import { View, Text } from "react-native";
+import { View } from "react-native";
 import React, { useEffect, useState } from "react";
 import Menu from "./Content/Menu/Menu";
 import Order from "./Content/Order/Order";
 import History from "./Content/History/History";
-import { collection, onSnapshot, updateDoc } from "firebase/firestore";
+import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "../config/firebase";
 import { order, menuList } from "interface";
-import API from "../apis/API";
 import Option from "./Content/Option/Option";
-import { Unsubscribe } from "firebase/firestore";
 
 interface props {
   content: string;
@@ -25,7 +23,8 @@ export default function ContentStage(props: props) {
   const [orders, setOrders] = useState<Array<order>>([]);
   const [history, setHistory] = useState<Array<order>>([]);
   const [isEditiing, setIsEditting] = useState(false);
-  const api = new API();
+  const [startDate, setStartDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(new Date());
 
   const logout = () => {
     props.setAuth(null);
@@ -104,6 +103,10 @@ export default function ContentStage(props: props) {
         selectedContent={props.content}
         history={history}
         renderComplete={props.renderComplete}
+        startDate={startDate}
+        setStartDate={setStartDate}
+        endDate={endDate}
+        setEndDate={setEndDate}
       />
       {Object.keys(props.menuList).length > 0 && (
         <Option

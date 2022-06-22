@@ -10,6 +10,10 @@ interface props {
   selectedContent: string;
   history: order[];
   renderComplete: Function;
+  startDate: Date;
+  setStartDate: Function;
+  endDate: Date;
+  setEndDate: Function;
 }
 
 export default function History(props: props) {
@@ -69,16 +73,22 @@ export default function History(props: props) {
   return orders.length !== 0 ? (
     <View
       style={[
-        { maxHeight: Dimensions.get("window").height },
+        { maxHeight: Dimensions.get("window").height * 0.96 },
         props.selectedContent === "History"
           ? { display: "flex" }
           : { display: "none" },
       ]}
     >
-      <Filter />
+      <Filter
+        startDate={props.startDate}
+        setStartDate={props.setStartDate}
+        endDate={props.endDate}
+        setEndDate={props.setEndDate}
+      />
       <ScrollView
         style={{
           backgroundColor: "white",
+          marginTop: Dimensions.get("screen").height * 0.05,
         }}
         showsHorizontalScrollIndicator={false}
       >

@@ -81,8 +81,8 @@ export default function ContentTable(props: props) {
               style={{
                 width: 5,
                 backgroundColor: "black",
-                height: "100%",
-                borderWidth: 2.5,
+                height: "99.75%",
+                borderWidth: 2,
                 borderColor: "white",
                 marginTop: 0,
                 alignSelf: "center",

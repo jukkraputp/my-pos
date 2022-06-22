@@ -196,8 +196,11 @@ export default function Option(props: props) {
         renderOptions().length === 1
           ? { justifyContent: "center" }
           : { justifyContent: "space-evenly" },
-        { width: "100%", height: Dimensions.get("screen").height },
-        { backgroundColor: "black" },
+        {
+          width: "100%",
+          height: "100%",
+        },
+        !admin && { height: Dimensions.get("screen").height * 0.9 },
       ]}
     >
       {!admin && renderOptions()}
