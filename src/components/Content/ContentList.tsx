@@ -21,7 +21,6 @@ interface props {
 }
 
 export default function ContentList(props: props) {
-
   const renderList = () => {
     return (
       <View style={styles.containerView}>
@@ -49,5 +48,8 @@ export default function ContentList(props: props) {
 }
 
 const styles = StyleSheet.create({
-  containerView: {},
+  containerView: {
+    width: "90%",
+    alignItems: "center",
+  },
 });

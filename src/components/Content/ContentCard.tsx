@@ -1,4 +1,11 @@
-import { View, Text, TouchableOpacity, Image, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Image,
+  StyleSheet,
+  Dimensions,
+} from "react-native";
 import React, { useEffect } from "react";
 import Theme from "../../constants/Theme";
 
@@ -47,10 +54,12 @@ export default function ContentCard(props: props) {
           style={
             props.from === "Edit"
               ? {
-                  width: 800,
+                  width: Dimensions.get("screen").width * 0.66,
                   flexDirection: "row",
                   justifyContent: "space-around",
                   alignItems: "center",
+                  alignSelf: "center",
+                  marginBottom: 10,
                 }
               : { flexDirection: "column" }
           }
@@ -63,12 +72,18 @@ export default function ContentCard(props: props) {
           <Text style={styles.text}>{props.name}</Text>
           <Text style={styles.text}>{props.price + " บาท"}</Text>
           {props.from === "Edit" && (
-            <TouchableOpacity
-              style={styles.editButton}
-              onPress={() => props.onChange(props.type + "_" + props.ID)}
+            <View
+              style={{
+                alignItems: "center",
+              }}
             >
-              <Text>Edit</Text>
-            </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.editButton}
+                onPress={() => props.onChange(props.type + "_" + props.ID)}
+              >
+                <Text>Edit</Text>
+              </TouchableOpacity>
+            </View>
           )}
         </View>
       )}

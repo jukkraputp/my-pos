@@ -200,7 +200,7 @@ export default function Option(props: props) {
           width: "100%",
           height: "100%",
         },
-        !admin && { height: Dimensions.get("screen").height * 0.9 },
+        !admin && { height: Dimensions.get("screen").height * 0.8 },
       ]}
     >
       {!admin && renderOptions()}
