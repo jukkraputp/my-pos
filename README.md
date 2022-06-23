@@ -15,7 +15,6 @@ Firebase structure
         foods: food list in order
         isFinished: is this order finished
         totalAmount: total amount of this order
-
     History (same as Order but History)
       field list: date: number(may be change to Timestamp later), foods: map, isFinished: boolean, totalAmount: number
         date: timestamp of order
