@@ -230,20 +230,34 @@ export default function EditMenu(props: props) {
               source={{ uri: currentItem.image }}
               resizeMethod="resize"
             />
-            <TextInput
-              placeholder={currentItem.name}
-              onChangeText={(text) => setNameInput(text)}
-              onSubmitEditing={() => {
-                priceInputBox.current?.focus();
+            <View
+              style={{
+                width: "55%",
+                justifyContent: "center",
+                alignItems: "center",
               }}
-            />
-            <TextInput
-              ref={priceInputBox}
-              placeholder={currentItem.price}
-              keyboardType={"phone-pad"}
-              onChangeText={(text) => setPriceInput(text)}
-              onSubmitEditing={saveEditMenu}
-            />
+            >
+              <Text>Name</Text>
+              <TextInput
+                style={[styles.textInput]}
+                placeholder={currentItem.name}
+                onChangeText={(text) => setNameInput(text)}
+                onSubmitEditing={() => {
+                  priceInputBox.current?.focus();
+                }}
+              />
+            </View>
+            <View style={{ width: "10%" }}>
+              <Text>Price</Text>
+              <TextInput
+                style={[styles.textInput]}
+                ref={priceInputBox}
+                placeholder={currentItem.price}
+                keyboardType={"phone-pad"}
+                onChangeText={(text) => setPriceInput(text)}
+                onSubmitEditing={saveEditMenu}
+              />
+            </View>
           </KeyboardAvoidingView>
         </MyModal>
       )}
@@ -326,5 +340,12 @@ const styles = StyleSheet.create({
     marginTop: 5,
     marginBottom: 5,
     zIndex: 25,
+  },
+  textInput: {
+    width: "100%",
+    borderWidth: 1,
+    borderColor: "black",
+    textAlign: "center",
+    textAlignVertical: "center",
   },
 });

@@ -46,8 +46,10 @@ export default function ContentCard(props: props) {
             source={{ uri: image }}
             resizeMethod="resize"
           />
-          <Text style={styles.text}>{props.name}</Text>
-          <Text style={styles.text}>{props.price} บาท</Text>
+          <Text style={styles.text}>
+            {props.name + "\n"}
+            {props.price} บาท
+          </Text>
         </TouchableOpacity>
       ) : (
         <View
@@ -69,8 +71,27 @@ export default function ContentCard(props: props) {
             source={{ uri: image }}
             resizeMethod="resize"
           />
-          <Text style={styles.text}>{props.name}</Text>
-          <Text style={styles.text}>{props.price + " บาท"}</Text>
+          {props.from === "Edit" ? (
+            <View
+              style={{
+                display: "flex",
+                flexDirection: "row",
+              }}
+            >
+              <Text style={[styles.text, { textAlignVertical: "center" }]}>
+                {props.name}
+              </Text>
+              <Text style={[styles.text, { textAlignVertical: "center" }]}>
+                {props.price} บาท
+              </Text>
+            </View>
+          ) : (
+            <Text style={styles.text}>
+              {props.name + "\n"}
+              {props.price} บาท
+            </Text>
+          )}
+
           {props.from === "Edit" && (
             <View
               style={{
@@ -94,22 +115,24 @@ export default function ContentCard(props: props) {
 const styles = StyleSheet.create({
   cardContainer: {
     flex: 1,
-    width: 100,
-    height: 150,
+    width: 125,
+    height: 175,
   },
   buttonContainer: {
-    width: 100,
-    height: 140,
+    width: 125,
+    height: 150,
     alignSelf: "center",
   },
   image: {
     width: 100,
     height: 100,
+    alignSelf: "center",
   },
   text: {
     textAlign: "center",
-    width: 100,
-    height: 20,
+    width: 125,
+    height: 75,
+    fontSize: 16,
   },
   editButton: {
     width: 50,

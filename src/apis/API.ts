@@ -100,7 +100,7 @@ export default class API {
     return String(res);
   };
 
-  private getPrice = async (item: string) => {
+  getPrice = async (item: string) => {
     const res = await getPrice(item);
     return Number(res);
   };
