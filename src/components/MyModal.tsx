@@ -57,7 +57,7 @@ export default function MyModal(props: props) {
             {buttonVisible && (
               <Pressable
                 style={[styles.button, styles.buttonClose]}
-                onPress={() => props.setModalVisible(!modalVisible)}
+                onPress={() => props.setModalVisible(!modalVisible, true)}
               >
                 <Text style={styles.textStyle}>Confirm</Text>
               </Pressable>

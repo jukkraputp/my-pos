@@ -1,5 +1,16 @@
-import { View, Text, Dimensions, StyleSheet } from "react-native";
-import React, { useState } from "react";
+import {
+  View,
+  Text,
+  Dimensions,
+  StyleSheet,
+  Pressable,
+  TouchableOpacity,
+} from "react-native";
+import React, { useEffect, useState } from "react";
+import RNDateTimePicker, {
+  DateTimePickerEvent,
+} from "@react-native-community/datetimepicker";
+import Theme from "../../../constants/Theme";
 
 interface props {
   startDate: Date;
@@ -9,21 +20,62 @@ interface props {
 }
 
 export default function Filter(props: props) {
+  const [showDate, setShowDate] = useState(props.startDate);
+  const [edittingDate, setEdittingDate] = useState<string>("none");
+
   const startDate = props.startDate;
   const endDate = props.endDate;
+  const currentYear = new Date(Date.now()).getFullYear();
+  const currentMonth = new Date(Date.now()).getMonth();
+  const currentDate = new Date(Date.now()).getDate();
+
+  const setDate = (event: DateTimePickerEvent) => {
+    if (event.type === "dismissed") {
+      setEdittingDate("none");
+    } else {
+      const timestamp: number = event.nativeEvent.timestamp
+        ? event.nativeEvent.timestamp
+        : -1;
+      const date = new Date(timestamp);
+      if (edittingDate === "startDate") props.setStartDate(date);
+      else if (edittingDate === "endDate") props.setEndDate(date);
+      setEdittingDate("none");
+    }
+  };
 
   return (
     <View style={styles.container}>
-      <View style={styles.filterContainer}>
+      <TouchableOpacity
+        style={styles.filterContainer}
+        onPress={() => {
+          setShowDate(startDate);
+          setEdittingDate("startDate");
+        }}
+      >
         <Text style={styles.filterFont}>
-          Start date: {startDate.toDateString()}
+          Start Date: {startDate.toDateString()}
         </Text>
-      </View>
-      <View style={styles.filterContainer}>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.filterContainer}
+        onPress={() => {
+          setShowDate(endDate);
+          setEdittingDate("endDate");
+        }}
+      >
         <Text style={styles.filterFont}>
-          End date: {endDate.toDateString()}
+          End Date: {endDate.toDateString()}
         </Text>
-      </View>
+      </TouchableOpacity>
+      {edittingDate !== "none" && (
+        <RNDateTimePicker
+          value={showDate}
+          onChange={setDate}
+          /* display="spinner" */
+          minimumDate={new Date(currentYear, currentMonth, 1)}
+          maximumDate={new Date(currentYear, currentMonth, currentDate)}
+        />
+      )}
     </View>
   );
 }
@@ -34,17 +86,22 @@ const styles = StyleSheet.create({
     height: Dimensions.get("window").height * 0.05,
     position: "absolute",
     flexDirection: "row",
-    justifyContent: "space-between",
     alignItems: "flex-start",
     zIndex: 20,
   },
   filterContainer: {
-    width: "80%",
+    width: "55%",
     height: Dimensions.get("window").height * 0.05,
-    backgroundColor: "black",
+    borderWidth: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    bottom: 0,
+    marginRight: 25,
+    backgroundColor: Theme.COLORS.HEADER,
   },
   filterFont: {
     color: "white",
     marginLeft: 10,
+    fontSize: 16,
   },
 });

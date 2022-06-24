@@ -23,14 +23,6 @@ interface props {
   setIsEditting: Function;
 }
 
-const ImageOptions = {
-  title: "select image",
-  storageOptions: { skipBackup: true, path: "images" },
-  maxWidth: 150,
-  maxHeight: 150,
-  chooseFromLibraryButtonTitle: "Choose from gallery",
-};
-
 export default function EditMenu(props: props) {
   const [state, setState] = useState<string>("");
   const [currentItem, setCurrentItem] = useState<{
@@ -98,20 +90,23 @@ export default function EditMenu(props: props) {
     console.log(currentItem);
   }, [currentItem]);
 
-  const saveEditMenu = () => {
-    var name = nameInput;
-    var price = priceInput;
-    if (name === "") name = currentItem.name;
-    if (price === "") price = currentItem.price;
-    api.editMenu(currentItem.ID, { name: name, price: price });
-    setCurrentItem({
-      ID: currentItem.ID,
-      name: name,
-      price: price,
-      image: currentItem.image,
-    });
-    setState("");
-    props.setIsEditting(true);
+  const saveEditMenu = (needSave: boolean = true) => {
+    if (!needSave) setState("");
+    else {
+      var name = nameInput;
+      var price = priceInput;
+      if (name === "") name = currentItem.name;
+      if (price === "") price = currentItem.price;
+      api.editMenu(currentItem.ID, { name: name, price: price });
+      setCurrentItem({
+        ID: currentItem.ID,
+        name: name,
+        price: price,
+        image: currentItem.image,
+      });
+      setState("");
+      props.setIsEditting(true);
+    }
   };
 
   const saveNewMenu = (type: string) => {
@@ -202,7 +197,7 @@ export default function EditMenu(props: props) {
               placeholder={"Price"}
               keyboardType={"phone-pad"}
               onChangeText={(text) => setPriceInput(text)}
-              onSubmitEditing={saveEditMenu}
+              onSubmitEditing={() => saveEditMenu()}
             />
           </KeyboardAvoidingView>
         </MyModal>
@@ -217,7 +212,9 @@ export default function EditMenu(props: props) {
           animation={undefined}
           styles={[
             styles.modalContainerView,
-            keyboardDidShow ? { marginTop: "0%" } : { marginTop: "10%" },
+            keyboardDidShow
+              ? { marginTop: "0%", bottom: 100 }
+              : { marginTop: "10%", bottom: 0 },
           ]}
           menuList={props.menuList}
         >
@@ -255,7 +252,7 @@ export default function EditMenu(props: props) {
                 placeholder={currentItem.price}
                 keyboardType={"phone-pad"}
                 onChangeText={(text) => setPriceInput(text)}
-                onSubmitEditing={saveEditMenu}
+                onSubmitEditing={() => saveEditMenu()}
               />
             </View>
           </KeyboardAvoidingView>
