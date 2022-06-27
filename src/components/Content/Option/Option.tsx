@@ -16,6 +16,7 @@ import EditMenu from "./EditMenu";
 import MyModal from "../../MyModal";
 import API from "../../../apis/API";
 import { menuList } from "interface";
+import Password from "./Password.json";
 
 interface props {
   selectedContent: string;
@@ -55,7 +56,7 @@ export default function Option(props: props) {
   }, [admin]);
 
   const checkPassword = () => {
-    if (password === "") {
+    if (password === Password.password) {
       setAdmin(true);
     } else {
       Alert.alert("Wrong password");
@@ -85,7 +86,7 @@ export default function Option(props: props) {
               items={{}}
               animation={"none"}
               buttonVisible={false}
-              styles={{ marginTop: "35%" }}
+              styles={{ marginTop: "20%" }}
               menuList={props.menuList}
             >
               <KeyboardAvoidingView

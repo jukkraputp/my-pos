@@ -25,9 +25,7 @@
       "adaptiveIcon": {
         "foregroundImage": "./src/assets/icons/shop-icon.png",
         "backgroundColor": "#ffffff"
-      },
-      "package": "com.my.pos",
-      "googleServicesFile": "./google-services.json"
+      }
     },
     "web": {
       "favicon": "./src/assets/icons/shop-icon.png"

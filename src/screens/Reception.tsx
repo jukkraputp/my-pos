@@ -13,7 +13,7 @@ import ContentStage from "../components/ContentStage";
 import Basket from "../components/Basket";
 import MyModal from "../components/MyModal";
 import { db } from "../config/firebase";
-import { addDoc, collection } from "firebase/firestore";
+import { addDoc, collection, Firestore } from "firebase/firestore";
 import LottieView from "lottie-react-native";
 import { menuList } from "interface";
 
@@ -73,8 +73,9 @@ export default class Reception extends React.Component<props, state> {
 
   renderComplete = (point: number = 1) => {
     this.renderCompleted += point;
-    if (this.renderCompleted === this.navbarList.length)
+    if (this.renderCompleted === this.navbarList.length - 2)
       this.setState({ renderFinish: true });
+    console.log(this.renderCompleted);
   };
 
   toggleOrder = () => {};
@@ -115,6 +116,7 @@ export default class Reception extends React.Component<props, state> {
     }
   };
 
+  // add new order
   setModalVisible = async (visible: boolean, isConfirm = false) => {
     if (isConfirm) {
       const order = this.state.basket;
@@ -123,8 +125,8 @@ export default class Reception extends React.Component<props, state> {
       await addDoc(collection(db, "Order"), {
         foods: order,
         totalAmount: totalAmount,
-        date: Date.now(),
-        isFinished: false,
+        date: new Date().getTime(),
+        isFinished: true,
       });
       this.setState({ confirmingOrder: false, basket: {} });
     } else {

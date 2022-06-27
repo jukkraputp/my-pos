@@ -12,6 +12,7 @@ web-build/
 *vscode*
 src/config/firebaseConfig.json
 google-services*
+*Password*
 
 # macOS
 .DS_Store

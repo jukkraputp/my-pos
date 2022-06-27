@@ -13,6 +13,7 @@ import RNDateTimePicker, {
 import Theme from "../../../constants/Theme";
 
 interface props {
+  style: {};
   startDate: Date;
   setStartDate: Function;
   endDate: Date;
@@ -44,7 +45,7 @@ export default function Filter(props: props) {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, props.style]}>
       <TouchableOpacity
         style={styles.filterContainer}
         onPress={() => {
@@ -73,7 +74,7 @@ export default function Filter(props: props) {
           onChange={setDate}
           /* display="spinner" */
           minimumDate={new Date(currentYear, currentMonth, 1)}
-          maximumDate={new Date(currentYear, currentMonth, currentDate)}
+          maximumDate={new Date(currentYear, currentMonth, currentDate + 1)}
         />
       )}
     </View>
@@ -101,7 +102,6 @@ const styles = StyleSheet.create({
   },
   filterFont: {
     color: "white",
-    marginLeft: 10,
     fontSize: 16,
   },
 });

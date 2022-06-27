@@ -60,9 +60,7 @@ export default function Menu(props: props) {
     },
     perRow: number = 4
   ) => {
-    console.log(menu);
     const list = Object.keys(menu);
-    console.log(list);
     var jsx = [];
     var start = 0;
     for (let index = perRow; index < list.length; index += perRow) {

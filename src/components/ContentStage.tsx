@@ -3,7 +3,15 @@ import React, { useEffect, useState } from "react";
 import Menu from "./Content/Menu/Menu";
 import Order from "./Content/Order/Order";
 import History from "./Content/History/History";
-import { collection, onSnapshot } from "firebase/firestore";
+import {
+  collection,
+  getDoc,
+  getDocs,
+  onSnapshot,
+  Query,
+  query,
+  where,
+} from "firebase/firestore";
 import { db } from "../config/firebase";
 import { order, menuList } from "interface";
 import Option from "./Content/Option/Option";
@@ -19,12 +27,16 @@ interface props {
   setEdit: Function;
 }
 
+const today = new Date();
+const tomorrow = new Date(today);
+tomorrow.setDate(tomorrow.getDate() + 1);
+
 export default function ContentStage(props: props) {
   const [orders, setOrders] = useState<Array<order>>([]);
   const [history, setHistory] = useState<Array<order>>([]);
   const [isEditiing, setIsEditting] = useState(false);
   const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(tomorrow);
 
   const logout = () => {
     props.setAuth(null);
@@ -40,20 +52,30 @@ export default function ContentStage(props: props) {
       setOrders(temp);
     });
 
-    const listenHistory = onSnapshot(collection(db, "History"), (snapShot) => {
+    return () => {
+      listenOrder();
+    };
+  }, []);
+
+  useEffect(() => {
+    const histRef = collection(db, "History");
+    const q = query(
+      histRef,
+      where("date", ">=", new Date(startDate.setHours(0, 0, 0, 0)).getTime()),
+      where("date", "<=", new Date(endDate.setHours(0, 0, 0, 0)).getTime())
+    );
+
+    const setHistoryData = async (query: Query) => {
+      const querySnapshot = await getDocs(query);
       var temp: Array<order> = [];
-      snapShot.docs.forEach((doc) => {
+      querySnapshot.docs.forEach((doc) => {
         const data: any = doc.data();
         temp.push(data);
       });
       setHistory(temp);
-    });
-
-    return () => {
-      listenOrder();
-      listenHistory();
     };
-  }, []);
+    setHistoryData(q);
+  }, [orders, startDate, endDate]);
 
   useEffect(() => {
     if (props.content !== "Option" && isEditiing) props.setMenuList();
@@ -65,10 +87,6 @@ export default function ContentStage(props: props) {
       setIsEditting(false);
     }
   }, [isEditiing]);
-
-  useEffect(() => {
-    console.log(props.menuList);
-  }, [props.menuList]);
 
   return (
     <View>
@@ -94,12 +112,14 @@ export default function ContentStage(props: props) {
         menu={props.menuList["FoodSet"]}
       />
       <Order
+        menuList={props.menuList}
         selectedContent={props.content}
         chef={false}
         orders={orders}
         renderComplete={props.renderComplete}
       />
       <History
+        menuList={props.menuList}
         selectedContent={props.content}
         history={history}
         renderComplete={props.renderComplete}

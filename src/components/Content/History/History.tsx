@@ -2,11 +2,12 @@ import { View, Text, ScrollView, Dimensions } from "react-native";
 import React, { useEffect, useState } from "react";
 import API from "../../../apis/API";
 import Filter from "./Filter";
-import { order } from "interface";
+import { menuList, order } from "interface";
 import ContentRow from "../ContentRow";
 import ContentTable from "../ContentTable";
 
 interface props {
+  menuList: menuList;
   selectedContent: string;
   history: order[];
   renderComplete: Function;
@@ -18,23 +19,10 @@ interface props {
 
 export default function History(props: props) {
   const [orders, setOrders] = useState(props.history);
-  const [allImages, setAllImages] = useState<{ [key: string]: string }>({});
   const [jsxElements, setJSXElements] = useState<JSX.Element[][]>([]);
   const [renderCompleted, setRenderCompeted] = useState(false);
 
-  const api = new API();
-
-  useEffect(() => {
-    api.getImages().then((urls) => {
-      var images: { [key: string]: string } = {};
-      urls.map((url) => {
-        const key = String(url.split("::").at(0));
-        const uri = url.split("::").at(1);
-        images[key] = String(uri);
-      });
-      setAllImages(images);
-    });
-  }, []);
+  const menuList = props.menuList;
 
   useEffect(() => {
     setOrders(props.history);
@@ -52,7 +40,7 @@ export default function History(props: props) {
     const childrenFnc = renderHistorySummary;
     const jsx = await ContentTable({
       childrenFnc,
-      allImages,
+      menuList,
       orders,
       from: "History",
     });
@@ -60,8 +48,8 @@ export default function History(props: props) {
   };
 
   useEffect(() => {
-    if (Object.keys(allImages).length !== 0 && orders.length !== 0) setJSX();
-  }, [orders, allImages]);
+    if (Object.keys(menuList).length !== 0 && orders.length !== 0) setJSX();
+  }, [orders, menuList]);
 
   useEffect(() => {
     if (jsxElements.length !== 0 && !renderCompleted) {
@@ -70,16 +58,19 @@ export default function History(props: props) {
     }
   }, [jsxElements]);
 
-  return orders.length !== 0 ? (
+  return (
     <View
       style={[
-        { maxHeight: Dimensions.get("window").height * 0.96 },
+        {
+          maxHeight: Dimensions.get("window").height * 0.96,
+        },
         props.selectedContent === "History"
           ? { display: "flex" }
           : { display: "none" },
       ]}
     >
       <Filter
+        style={{}}
         startDate={props.startDate}
         setStartDate={props.setStartDate}
         endDate={props.endDate}
@@ -95,7 +86,5 @@ export default function History(props: props) {
         {jsxElements}
       </ScrollView>
     </View>
-  ) : (
-    <></>
   );
 }

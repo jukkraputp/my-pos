@@ -10,10 +10,11 @@ import {
 } from "firebase/firestore";
 import { db } from "../../../config/firebase";
 import Theme from "../../../constants/Theme";
-import { order } from "interface";
+import { menuList, order } from "interface";
 import ContentTable from "../ContentTable";
 
 interface props {
+  menuList: menuList;
   selectedContent: string;
   orders: Array<order>;
   chef: boolean;
@@ -22,23 +23,10 @@ interface props {
 
 export default function Order(props: props) {
   const [orders, setOrders] = useState<Array<order>>([]);
-  const [allImages, setAllImages] = useState<{ [key: string]: string }>({});
   const [jsxElements, setJSXElements] = useState<JSX.Element[][]>([]);
   const [renderCompleted, setRenderCompeted] = useState(false);
 
-  const api = new API();
-
-  useEffect(() => {
-    api.getImages().then((urls) => {
-      var images: { [key: string]: string } = {};
-      urls.map((url) => {
-        const key = String(url.split("::").at(0));
-        const uri = url.split("::").at(1);
-        images[key] = String(uri);
-      });
-      setAllImages(images);
-    });
-  }, []);
+  const menuList = props.menuList
 
   useEffect(() => {
     if (!!props.orders) setOrders(props.orders);
@@ -116,7 +104,7 @@ export default function Order(props: props) {
     const childrenFnc = renderOrderOptions;
     const jsx = await ContentTable({
       childrenFnc,
-      allImages,
+      menuList,
       orders: orders,
       from: "Order",
     });
@@ -124,15 +112,19 @@ export default function Order(props: props) {
   };
 
   useEffect(() => {
-    if (Object.keys(allImages).length !== 0 && orders.length !== 0) setJSX();
-  }, [orders, allImages]);
+    if (Object.keys(menuList).length !== 0 && orders.length !== 0)
+      setJSX();
+  }, [orders, menuList]);
 
   useEffect(() => {
     if (jsxElements.length !== 0 && !renderCompleted) {
       setRenderCompeted(true);
-      !!props.renderComplete ? props.renderComplete() : null;
     }
   }, [jsxElements]);
+
+  useEffect(() => {
+    !!props.renderComplete ? props.renderComplete() : null;
+  }, [renderCompleted]);
 
   return orders.length !== 0 ? (
     <ScrollView
