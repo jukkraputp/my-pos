@@ -35,7 +35,6 @@ interface state {
   confirmingOrder: boolean;
   renderFinish: boolean;
   menuList: menuList;
-  status: string[];
 }
 
 export default class Reception extends React.Component<props, state> {
@@ -53,7 +52,6 @@ export default class Reception extends React.Component<props, state> {
       confirmingOrder: false,
       renderFinish: false,
       menuList: {},
-      status: ["loading"],
     };
     this.navbarList = [
       "Food1",
@@ -72,27 +70,12 @@ export default class Reception extends React.Component<props, state> {
   }
 
   componentDidMount() {
-    this.setState({ status: [...this.state.status, "loading..."] });
-    this.setMenu().then(() => {
-      this.setState({ status: [...this.state.status, "finished"] });
-    });
+    this.setMenu();
   }
 
   setMenu = async () => {
     const menu = await this.API.getMenu();
-    const keys = await AsyncStorage.getAllKeys();
-    keys
-      .filter((key) => key.includes("Food"))
-      .map(async (key) => {
-        try {
-          const url = String(await AsyncStorage.getItem(key));
-          this.setState({ status: [...this.state.status, url] });
-        } catch (err) {
-          this.setState({ status: [...this.state.status, String(err)] });
-        }
-      });
-    console.log(menu);
-    /* this.setState({ menuList: menu }); */
+    this.setState({ menuList: menu });
   };
 
   setEdit = () => {
@@ -187,7 +170,7 @@ export default class Reception extends React.Component<props, state> {
             }}
           >
             {Platform.OS !== "web" ? (
-              /* <LottieView
+              <LottieView
                 source={require("../assets/animation/colors-circle-loader.json")}
                 style={[
                   {
@@ -202,10 +185,7 @@ export default class Reception extends React.Component<props, state> {
                     : { display: "flex" },
                 ]}
                 autoPlay
-              /> */ <ScrollView>
-                {this.state.status.map((text) => {
-                  return <Text key={text}>{text}</Text>;
-                })}
+              /> /* <ScrollView>
                 {Object.keys(this.state.menuList).map((type) => {
                   const items = this.state.menuList[type];
                   const jsx = Object.keys(items).map((key) => {
@@ -219,7 +199,7 @@ export default class Reception extends React.Component<props, state> {
                   });
                   return jsx;
                 })}
-              </ScrollView>
+              </ScrollView> */
             ) : null}
             <ScrollView
               style={[

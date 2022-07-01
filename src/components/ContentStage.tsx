@@ -32,7 +32,7 @@ const today = new Date();
 const tomorrow = new Date(today);
 tomorrow.setDate(tomorrow.getDate() + 1);
 
-const debug = true;
+const debug = false;
 
 export default function ContentStage(props: props) {
   const [orders, setOrders] = useState<Array<order>>([]);

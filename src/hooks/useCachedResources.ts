@@ -20,9 +20,9 @@ export default function useCachedResources() {
           const imageList = storageRef.prefixes.map(async (typeRef) => {
             const imagesRef = await listAll(ref(typeRef))
             const imagesURL = imagesRef.items.map(async (imageRef) => {
-              const key = String(imageRef.fullPath.split("/").at(0));
+              const key = String(imageRef.fullPath.split("/")[0]);
               const imageName = String(
-                String(imageRef.fullPath.split("/").at(1)).split(".").at(0)
+                String(imageRef.fullPath.split("/")[1]).split(".")[0]
               );
               const url = await getDownloadURL(imageRef)
               await AsyncStorage.setItem(`${key}_${imageName}`, url)

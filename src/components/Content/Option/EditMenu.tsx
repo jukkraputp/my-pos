@@ -66,8 +66,8 @@ export default function EditMenu(props: props) {
   const addNewMenu = () => {};
 
   const editMenu = async (menuID: string) => {
-    const type = String(menuID.split("_").at(0));
-    const ID = String(menuID.split("_").at(-1));
+    const type = String(menuID.split("_")[0]);
+    const ID = String(menuID.split("_")[1]);
     const name = await AsyncStorage.getItem(menuID + "_name");
     const price = await AsyncStorage.getItem(menuID + "_price");
     const image = await AsyncStorage.getItem(type + "_" + type + "-" + ID);

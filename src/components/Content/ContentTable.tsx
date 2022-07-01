@@ -22,8 +22,8 @@ export default function ContentTable(props: props) {
         Object.keys(order.foods)
           .sort()
           .forEach((food) => {
-            const index1 = String(food.split("_").at(0));
-            const index2 = String(food.split("_").at(-1));
+            const index1 = String(food.split("_")[0]);
+            const index2 = String(food.split("_")[1]);
 
             menu.push(props.menuList[index1][index2]);
             amounts[props.menuList[index1][index2].name] = order.foods[food];
