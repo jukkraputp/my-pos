@@ -1,6 +1,4 @@
-import { StatusBar } from "expo-status-bar";
 import React, { useEffect, useState } from "react";
-import { SafeAreaProvider } from "react-native-safe-area-context";
 import * as ScreenOrientation from "expo-screen-orientation";
 
 import useCachedResources from "./src/hooks/useCachedResources";
@@ -8,10 +6,12 @@ import Reception from "./src/screens/Reception";
 import Chef from "./src/screens/Chef";
 import Login from "./src/screens/Login";
 import API from "./src/apis/API";
-import { LogBox, Platform } from "react-native";
+import { LogBox, Platform, ScrollView, Text, View } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { ref, uploadBytes } from "firebase/storage";
-import { storage } from "./src/config/firebase";
+import { collection, getDocs, query } from "firebase/firestore";
+import { db } from "./src/config/firebase";
+import * as Updates from "expo-updates";
+import { UpdateEventType } from "expo-updates";
 
 LogBox.ignoreLogs([
   "ViewPropTypes will be removed",
@@ -37,6 +37,7 @@ async function changeScreenOrientation() {
 
 export default function App() {
   const [auth, setAuth] = useState<string | null>("waiter" /* null */);
+  const [itemList, setItemList] = useState<{ [key: string]: any }[]>([]);
 
   const api = new API();
 
@@ -47,9 +48,17 @@ export default function App() {
 
   useEffect(() => {
     changeScreenOrientation();
-    AsyncStorage.clear().then(() => {
-      api.saveData();
+
+    var temp: {}[] = [];
+    getDocs(query(collection(db, "Menu"))).then((snapShot) => {
+      snapShot.forEach((doc) => {
+        temp.push(doc.data());
+      });
+      setItemList(temp);
     });
+
+    AsyncStorage.clear();
+
     /* api.saveData(); */
 
     /* AsyncStorage.getAllKeys().then((keys) => {
@@ -75,6 +84,18 @@ export default function App() {
       if (auth === null) setAuth(await AsyncStorage.getItem("Auth"));
     };
     inititalAuth();
+
+    const listener = Updates.addListener((event) => {
+      if (event.manifest) {
+        Updates.fetchUpdateAsync().then(() => {
+          Updates.reloadAsync();
+        });
+      }
+    });
+
+    return () => {
+      listener();
+    };
   }, []);
 
   if (isLoadingComplete) {
@@ -84,6 +105,17 @@ export default function App() {
       case "waiter":
       case "reception":
         return <Reception setAuth={setAuth} />;
+        return (
+          <ScrollView>
+            {itemList.map((item) => {
+              return (
+                <Text key={item["name"]}>
+                  name: {item["name"] + "\t"} price: {item["price"]}
+                </Text>
+              );
+            })}
+          </ScrollView>
+        );
       case "chef":
         return <Chef setAuth={setAuth} />;
       default:

@@ -4,8 +4,7 @@ import ContentCard from "./ContentCard";
 import API from "../../apis/API";
 
 interface props {
-  data: string[];
-  ids: { [key: string]: string };
+  datas: { name: string; price: string; image: string }[];
   flexNumber: number;
   amounts: { [key: string]: number };
   from: string;
@@ -13,10 +12,7 @@ interface props {
 }
 
 export default function ContentRow(props: props) {
-  const api = new API();
-
-  const data = props.data;
-  const ids = props.ids;
+  const datas = props.datas;
   const flexNumber = props.flexNumber;
   const amounts = props.amounts;
 
@@ -29,48 +25,43 @@ export default function ContentRow(props: props) {
           marginTop: 5,
           justifyContent: "flex-start",
         }}
-        key={props.date + "_" + data[0] + "_" + props.from + "_renderRow"}
+        key={props.date + "_" + datas[0] + "_" + props.from + "_renderRow"}
       >
-        {await Promise.all(
-          data.map(async (image, idx) => {
-            const name = await api.getName(ids[image]);
-            const price = await api.getPrice(ids[image]);
-            const key =
-              props.date + "_" + name + "_" + props.from + "_renderRow_card";
-            return (
-              <View
+        {datas.map((data) => {
+          const name = data.name;
+          const price = Number(data.price);
+          const image = data.image;
+          const key =
+            props.date + "_" + name + "_" + props.from + "_renderRow_card";
+          return (
+            <View
+              style={{
+                flex: 1,
+                flexDirection: "row",
+                marginRight: 10,
+              }}
+              key={key}
+            >
+              <ContentCard
+                name={name}
+                image={image}
+                price={price}
+                from={"Order"}
+              />
+              <Text
                 style={{
-                  flex: 1,
-                  flexDirection: "row",
-                  marginRight: 10,
+                  fontSize: 24,
+                  fontWeight: "bold",
+                  textAlign: "center",
+                  alignSelf: "center",
+                  marginBottom: "30%",
                 }}
-                key={key}
               >
-                <ContentCard
-                  name={name}
-                  image={image}
-                  ID={ids[image]}
-                  price={price}
-                  type={ids[image]}
-                  onChange={() => {}}
-                  key={ids[image]}
-                  from={"Order"}
-                />
-                <Text
-                  style={{
-                    fontSize: 24,
-                    fontWeight: "bold",
-                    textAlign: "center",
-                    alignSelf: "center",
-                    marginBottom: "30%",
-                  }}
-                >
-                  {"x"} {amounts[image]}
-                </Text>
-              </View>
-            );
-          })
-        )}
+                {"x"} {amounts[image]}
+              </Text>
+            </View>
+          );
+        })}
         <View style={{ flex: flexNumber }} />
       </View>
     );

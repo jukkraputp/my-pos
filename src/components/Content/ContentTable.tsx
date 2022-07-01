@@ -17,18 +17,16 @@ export default function ContentTable(props: props) {
     const tableJSX = orders
       .sort((a: any, b: any) => a.date - b.date)
       .map(async (order) => {
-        var menu: Array<string> = [];
-        var ids: { [key: string]: string } = {};
+        var menu: { name: string; price: string; image: string }[] = [];
         var amounts: { [key: string]: number } = {};
         Object.keys(order.foods)
           .sort()
           .forEach((food) => {
-            const index1 = food.split("_")[0];
-            const index2 = food.split("_")[1];
-            const image = props.menuList[index1][index2].image;
-            ids[image] = food;
-            amounts[image] = order.foods[food];
-            menu.push(image);
+            const index1 = String(food.split("_").at(0));
+            const index2 = String(food.split("_").at(-1));
+
+            menu.push(props.menuList[index1][index2]);
+            amounts[props.menuList[index1][index2].name] = order.foods[food];
           });
         var jsx = [
           <View
@@ -41,11 +39,10 @@ export default function ContentTable(props: props) {
         var start = 0;
         const perRow = 4;
         for (let index = perRow; index < menu.length; index += perRow) {
-          const data = menu.slice(start, index);
+          const datas = menu.slice(start, index);
           const flexNumber = 0;
           const jsxRow = await ContentRow({
-            data,
-            ids,
+            datas,
             flexNumber,
             amounts,
             from: props.from,
@@ -54,11 +51,10 @@ export default function ContentTable(props: props) {
           jsx.push(jsxRow);
           start = index;
         }
-        const data = menu.slice(start);
+        const datas = menu.slice(start);
         const flexNumber = perRow - (menu.length - start);
         const jsxLastRow = await ContentRow({
-          data,
-          ids,
+          datas,
           flexNumber,
           amounts,
           from: props.from,

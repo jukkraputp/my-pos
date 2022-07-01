@@ -6,17 +6,17 @@ import {
   StyleSheet,
   Dimensions,
 } from "react-native";
-import React, { useEffect } from "react";
+import React from "react";
 import Theme from "../../constants/Theme";
 
 interface props {
   name: string;
-  ID: string;
   price: number;
   image: string;
-  type: string;
-  onChange: Function;
   from: string;
+  type?: string;
+  ID?: string;
+  onChange?: Function;
 }
 
 export default function ContentCard(props: props) {
@@ -27,7 +27,7 @@ export default function ContentCard(props: props) {
       ? props.image
       : "https://firebasestorage.googleapis.com/v0/b/mypos-3f997.appspot.com/o/Sign%2Fquestion_mark-sign.svg?alt=media&token=275bf15a-a310-46a6-a56c-630c8d0eb180";
 
-  /*   useEffect(() => {
+  /* useEffect(() => {
     if (props.from === "Order") {
       console.log(props);
     }
@@ -100,7 +100,7 @@ export default function ContentCard(props: props) {
             >
               <TouchableOpacity
                 style={styles.editButton}
-                onPress={() => props.onChange(props.type + "_" + props.ID)}
+                onPress={() => onChange(props.type + "_" + props.ID)}
               >
                 <Text>Edit</Text>
               </TouchableOpacity>

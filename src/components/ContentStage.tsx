@@ -1,4 +1,4 @@
-import { View } from "react-native";
+import { Text, View } from "react-native";
 import React, { useEffect, useState } from "react";
 import Menu from "./Content/Menu/Menu";
 import Order from "./Content/Order/Order";
@@ -25,11 +25,14 @@ interface props {
   menuList: menuList;
   setMenuList: Function;
   setEdit: Function;
+  menuTypeList: string[];
 }
 
 const today = new Date();
 const tomorrow = new Date(today);
 tomorrow.setDate(tomorrow.getDate() + 1);
+
+const debug = true;
 
 export default function ContentStage(props: props) {
   const [orders, setOrders] = useState<Array<order>>([]);
@@ -88,29 +91,58 @@ export default function ContentStage(props: props) {
     }
   }, [isEditiing]);
 
-  return (
+  return debug ? (
     <View>
-      <Menu
-        selectedContent={props.content}
-        type={"Food1"}
-        onChange={props.updateBasket}
-        renderComplete={props.renderComplete}
-        menu={props.menuList["Food1"]}
-      />
-      <Menu
-        selectedContent={props.content}
-        type={"Food2"}
-        onChange={props.updateBasket}
-        renderComplete={props.renderComplete}
-        menu={props.menuList["Food2"]}
-      />
-      <Menu
-        selectedContent={props.content}
-        type={"FoodSet"}
-        onChange={props.updateBasket}
-        renderComplete={props.renderComplete}
-        menu={props.menuList["FoodSet"]}
-      />
+      {Object.keys(props.menuList).map((type) => {
+        return (
+          <View key={type}>
+            <Text>{type}</Text>
+            {Object.keys(props.menuList[type]).map((key) => {
+              const item = props.menuList[type][key];
+              return (
+                <Text key={item.name}>
+                  {item.name} {item.price}
+                </Text>
+              );
+            })}
+          </View>
+        );
+      })}
+      {orders.map((order) => {
+        return (
+          <View key={String(order.date)}>
+            <Text>{order.date}</Text>
+            {Object.keys(order.foods).map((food) => {
+              return <Text key={food}>{food}</Text>;
+            })}
+          </View>
+        );
+      })}
+      {history.map((order) => {
+        return (
+          <View key={String(order.date)}>
+            <Text>{order.date}</Text>
+            {Object.keys(order.foods).map((food) => {
+              return <Text key={food}>{food}</Text>;
+            })}
+          </View>
+        );
+      })}
+    </View>
+  ) : (
+    <View>
+      {props.menuTypeList.map((type) => {
+        return (
+          <Menu
+            selectedContent={props.content}
+            type={type}
+            onChange={props.updateBasket}
+            renderComplete={props.renderComplete}
+            menu={props.menuList[type]}
+            key={"menu_" + type}
+          />
+        );
+      })}
       <Order
         menuList={props.menuList}
         selectedContent={props.content}

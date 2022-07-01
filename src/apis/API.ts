@@ -21,7 +21,18 @@ export default class API {
   };
 
   getMenu = async () => {
-    return await getMenu();
+    var menu = await getMenu();
+    const images = await this.getImages();
+    const setImages = images.map(async (item) => {
+      const key = String(item.split("::")[0]);
+      const image = String(item.split("::")[1]);
+      const type = String(key.split("_")[0]);
+      const id = String(String(key.split("_")[1]).split("-")[1]);
+      menu[type][id].image = image;
+    });
+    return await Promise.all(setImages).then(() => {
+      return menu;
+    });
   };
 
   logout = async () => {
@@ -34,7 +45,7 @@ export default class API {
     const keys = await AsyncStorage.getAllKeys();
     keys.forEach((key) => {
       if (key.includes(type + "_")) {
-        const id = Number(key.split("_").at(1));
+        const id = Number(key.split("_")[1]);
         if (temp < id) {
           temp = id;
         }
@@ -80,11 +91,13 @@ export default class API {
 
   getImages = async () => {
     const keys = await AsyncStorage.getAllKeys();
-    const getURL = keys.map(async (key) => {
-      const url = String(await AsyncStorage.getItem(key));
-      return `${key}::${url}`;
-    });
-    return Promise.all(getURL);
+    const urls = keys
+      .filter((key) => key.includes("Food"))
+      .map(async (key) => {
+        const url = String(await AsyncStorage.getItem(key));
+        return `${key}::${url}`;
+      });
+    return Promise.all(urls);
   };
 
   getOrders = async () => {
@@ -108,8 +121,8 @@ export default class API {
   getTotalAmount = (order: { [key: string]: any }, menuList: menuList) => {
     var totalAmount = 0;
     Object.keys(order).forEach((menu) => {
-      const index1 = String(menu.split("_").at(0));
-      const index2 = String(menu.split("_").at(1));
+      const index1 = String(menu.split("_")[0]);
+      const index2 = String(menu.split("_")[1]);
       totalAmount += Number(menuList[index1][index2].price) * order[menu];
     });
     return totalAmount;

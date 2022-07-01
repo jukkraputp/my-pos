@@ -5,6 +5,7 @@ import {
   StyleSheet,
   Dimensions,
   Platform,
+  Text,
 } from "react-native";
 import React from "react";
 import API from "../apis/API";
@@ -13,9 +14,16 @@ import ContentStage from "../components/ContentStage";
 import Basket from "../components/Basket";
 import MyModal from "../components/MyModal";
 import { db } from "../config/firebase";
-import { addDoc, collection, Firestore } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  Firestore,
+  getDocs,
+  query,
+} from "firebase/firestore";
 import LottieView from "lottie-react-native";
 import { menuList } from "interface";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 interface props {
   setAuth: Function;
@@ -27,6 +35,7 @@ interface state {
   confirmingOrder: boolean;
   renderFinish: boolean;
   menuList: menuList;
+  status: string[];
 }
 
 export default class Reception extends React.Component<props, state> {
@@ -34,15 +43,17 @@ export default class Reception extends React.Component<props, state> {
   showCurrent: Boolean;
   API: API;
   renderCompleted: number;
+  db: { [key: string]: any } = db.toJSON();
 
   constructor(props: props) {
     super(props);
     this.state = {
-      content: "History",
+      content: "Food1",
       basket: {},
       confirmingOrder: false,
       renderFinish: false,
       menuList: {},
+      status: ["loading"],
     };
     this.navbarList = [
       "Food1",
@@ -58,13 +69,30 @@ export default class Reception extends React.Component<props, state> {
       this.state.content !== "History" &&
       this.state.content !== "Option";
     this.API = new API();
+  }
 
-    this.setMenu();
+  componentDidMount() {
+    this.setState({ status: [...this.state.status, "loading..."] });
+    this.setMenu().then(() => {
+      this.setState({ status: [...this.state.status, "finished"] });
+    });
   }
 
   setMenu = async () => {
     const menu = await this.API.getMenu();
-    this.setState({ menuList: menu });
+    const keys = await AsyncStorage.getAllKeys();
+    keys
+      .filter((key) => key.includes("Food"))
+      .map(async (key) => {
+        try {
+          const url = String(await AsyncStorage.getItem(key));
+          this.setState({ status: [...this.state.status, url] });
+        } catch (err) {
+          this.setState({ status: [...this.state.status, String(err)] });
+        }
+      });
+    console.log(menu);
+    /* this.setState({ menuList: menu }); */
   };
 
   setEdit = () => {
@@ -159,7 +187,7 @@ export default class Reception extends React.Component<props, state> {
             }}
           >
             {Platform.OS !== "web" ? (
-              <LottieView
+              /* <LottieView
                 source={require("../assets/animation/colors-circle-loader.json")}
                 style={[
                   {
@@ -174,7 +202,24 @@ export default class Reception extends React.Component<props, state> {
                     : { display: "flex" },
                 ]}
                 autoPlay
-              />
+              /> */ <ScrollView>
+                {this.state.status.map((text) => {
+                  return <Text key={text}>{text}</Text>;
+                })}
+                {Object.keys(this.state.menuList).map((type) => {
+                  const items = this.state.menuList[type];
+                  const jsx = Object.keys(items).map((key) => {
+                    return (
+                      <Text key={key}>
+                        name: {items[key].name + "\n"}
+                        price: {items[key].price + "\n"}
+                        image: {items[key].image + "\n"}
+                      </Text>
+                    );
+                  });
+                  return jsx;
+                })}
+              </ScrollView>
             ) : null}
             <ScrollView
               style={[
@@ -196,6 +241,7 @@ export default class Reception extends React.Component<props, state> {
                 menuList={this.state.menuList}
                 setMenuList={this.setMenu}
                 setEdit={this.setEdit}
+                menuTypeList={this.navbarList.slice(0, 3)}
               />
             </ScrollView>
           </View>
