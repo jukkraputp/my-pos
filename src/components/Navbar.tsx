@@ -1,4 +1,10 @@
-import { View, Text, Dimensions } from "react-native";
+import {
+  View,
+  Text,
+  Dimensions,
+  KeyboardAvoidingView,
+  SafeAreaView,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import NavbarController from "./Navbar/NavbarController";
 import API from "../apis/API";
@@ -16,17 +22,20 @@ interface props {
 export default function Navbar(props: props) {
   const [navbarList, setNavbarList] = useState<Array<string>>([]);
 
+  const screenHeight = Dimensions.get("screen").height;
+
   useEffect(() => {
     setNavbarList(props.navbarList);
   }, [props.navbarList]);
 
   return (
-    <View
+    <KeyboardAvoidingView
+      behavior={"height"}
       style={{
         display: "flex",
         backgroundColor: "darkgray",
         flex: 6,
-        height: Dimensions.get("screen").height,
+        height: screenHeight,
       }}
     >
       {[...Array(navbarList.length).keys()].map((index) => {
@@ -40,6 +49,6 @@ export default function Navbar(props: props) {
           />
         );
       })}
-    </View>
+    </KeyboardAvoidingView>
   );
 }

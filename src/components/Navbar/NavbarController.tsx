@@ -5,6 +5,7 @@ import {
   StyleSheet,
   Image,
   Platform,
+  Dimensions,
 } from "react-native";
 import React from "react";
 import materialTheme from "../../constants/Theme";
@@ -90,9 +91,9 @@ const styles = StyleSheet.create({
     width: 36,
   },
   headline: {
-    textAlign: "center", // <-- the magic
+    textAlign: "center",
     fontWeight: "bold",
-    fontSize: 20,
+    fontSize: (Dimensions.get("screen").height / 650) * 20,
     marginTop: 0,
     marginStart: "10%",
   },

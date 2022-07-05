@@ -25,7 +25,7 @@ export default function ContentRow(props: props) {
           marginTop: 5,
           justifyContent: "flex-start",
         }}
-        key={props.date + "_" + datas[0] + "_" + props.from + "_renderRow"}
+        key={props.date + "_" + datas[0].name + "_" + props.from + "_renderRow"}
       >
         {datas.map((data) => {
           const name = data.name;

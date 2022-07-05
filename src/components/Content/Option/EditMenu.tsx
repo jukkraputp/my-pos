@@ -65,12 +65,12 @@ export default function EditMenu(props: props) {
 
   const addNewMenu = () => {};
 
-  const editMenu = async (menuID: string) => {
+  const editMenu = (menuID: string) => {
     const type = String(menuID.split("_")[0]);
     const ID = String(menuID.split("_")[1]);
-    const name = await AsyncStorage.getItem(menuID + "_name");
-    const price = await AsyncStorage.getItem(menuID + "_price");
-    const image = await AsyncStorage.getItem(type + "_" + type + "-" + ID);
+    const name = props.menuList[type][ID].name;
+    const price = props.menuList[type][ID].price;
+    const image = props.menuList[type][ID].image;
     const item: {
       ID: string;
       name: string;
@@ -96,7 +96,7 @@ export default function EditMenu(props: props) {
       var name = nameInput;
       var price = priceInput;
       if (name === "") name = currentItem.name;
-      if (price === "") price = currentItem.price;
+      if (price === "" || isNaN(Number(price))) price = currentItem.price;
       api.editMenu(currentItem.ID, { name: name, price: price });
       setCurrentItem({
         ID: currentItem.ID,
