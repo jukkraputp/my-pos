@@ -26,8 +26,7 @@
         "foregroundImage": "./src/assets/icons/shop-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.my.pos",
-      "googleServicesFile": "./google-services.json"
+      "package": "com.my.pos"
     },
     "web": {
       "favicon": "./src/assets/icons/shop-icon.png"
